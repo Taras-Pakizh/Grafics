@@ -28,11 +28,35 @@ namespace Lab1
         #region Events
         private void MyCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            TransformPointChangeSize(e);
             Draw(e.NewSize.Height, e.NewSize.Width);
         }
         private void MyCanvas_Loaded(object sender, RoutedEventArgs e)
         {
             Height++;
+        }
+        //Clear
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            rectancles.Clear();
+            rectaclesPoints.Clear();
+            Draw(HeightToDraw, WidthToDraw);
+        }
+        private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (temp == new Point(-1, -1))
+            {
+                temp = e.GetPosition(MyCanvas);
+            }
+            else
+            {
+                Point point = e.GetPosition(MyCanvas);
+                if (temp.X <= point.X)
+                    DrawRectancles(temp, point, true);
+                else DrawRectancles(point, temp, true);
+                temp = new Point(-1, -1);
+                Draw(HeightToDraw, WidthToDraw);
+            }
         }
         #endregion
 
@@ -42,6 +66,8 @@ namespace Lab1
         private int HorizontalDashes = 10;
         private int VerticalDashes = 20;
         private List<Path> rectancles = new List<Path>();
+        private List<Point[]> rectaclesPoints = new List<Point[]>();
+        private Point temp = new Point(-1, -1);
 
         //Path
         private Path GetSolid()
@@ -92,10 +118,11 @@ namespace Lab1
             var labels = GetLabels();
             foreach (var label in labels)
                 MyCanvas.Children.Add(label);
-            DrawRectancle(new Point(50, 50), new Point(100, 100));
             foreach (var item in rectancles)
                 MyCanvas.Children.Add(item);
         }
+
+        #region Figures
         private PathFigure GetHorixontalCoorLine()
         {
             PathFigure figure = new PathFigure();
@@ -197,30 +224,81 @@ namespace Lab1
                 labelY
             };
         }
+        #endregion
 
         //Logic
-        private void DrawRectancle(Point leftUp, Point rightUp)
+        private void DrawRectancles(Point leftUp, Point rightUp, bool New)
         {
+            if(New == true)
+                rectaclesPoints.Add(new Point[] { leftUp, rightUp });
+
             double Xdelta = Math.Abs(leftUp.X - rightUp.X);
-            double Ydelta = Math.Abs(leftUp.Y = rightUp.Y);
-            Point[] rectanclePoints = new Point[]
+            double Ydelta = Math.Abs(leftUp.Y - rightUp.Y);
+            Point[] rectanclePoints = null;
+            if(leftUp.Y >= rightUp.Y)
             {
-                rightUp,
-                new Point(rightUp.X - Xdelta, rightUp.Y + Ydelta),
-                new Point(leftUp.X - Xdelta, rightUp.Y + Ydelta)
+                rectanclePoints = new Point[]
+                {
+                    rightUp,
+                    new Point(rightUp.X + Ydelta, rightUp.Y + Xdelta),
+                    new Point(leftUp.X + Ydelta, leftUp.Y + Xdelta),
+                };
+            }
+            else
+            {
+                rectanclePoints = new Point[]
+                {
+                    rightUp,
+                    new Point(rightUp.X - Ydelta, rightUp.Y + Xdelta),
+                    new Point(leftUp.X - Ydelta, leftUp.Y + Xdelta),
+                };
+            }
+            Point[] insideRectanclePoints = new Point[]
+            {
+                 new Point((rightUp.X + rectanclePoints[1].X) / 2, (rightUp.Y + rectanclePoints[1].Y) / 2),
+                 new Point((rectanclePoints[1].X + rectanclePoints[2].X) / 2, (rectanclePoints[1].Y + rectanclePoints[2].Y) / 2),
+                 new Point((rectanclePoints[2].X + leftUp.X) / 2, (rectanclePoints[2].Y + leftUp.Y) / 2),
             };
+
             PathFigure figure = new PathFigure();
             figure.StartPoint = leftUp;
             figure.Segments.Add(new PolyLineSegment(rectanclePoints, true));
             figure.IsClosed = true;
 
-            //-------Shit
+            PathFigure figure1 = new PathFigure();
+            figure1.StartPoint = new Point() { X = (leftUp.X + rightUp.X) / 2, Y = (leftUp.Y + rightUp.Y) / 2};
+            figure1.Segments.Add(new PolyLineSegment(insideRectanclePoints, true));
+            figure1.IsClosed = true;
+
             var path = GetSolid();
             var geo = new PathGeometry();
             geo.Figures.Add(figure);
+            geo.Figures.Add(figure1);
             path.Data = geo;
             rectancles.Add(path);
-            //Draw(HeightToDraw, WidthToDraw);
+        }
+        private void TransformPointChangeSize(SizeChangedEventArgs args)
+        {
+            for(int i = 0; i < rectaclesPoints.Count; ++i)
+            {
+                for(int index = 0; index < rectaclesPoints[i].Length; ++index)
+                {
+                    rectaclesPoints[i][index] = new Point()
+                    {
+                        X = rectaclesPoints[i][index].X * (args.NewSize.Width / args.PreviousSize.Width),
+                        Y = rectaclesPoints[i][index].Y * (args.NewSize.Height / args.PreviousSize.Height)
+                    };
+                }
+            }
+            TransformRectancle();
+        }
+        private void TransformRectancle()
+        {
+            rectancles.Clear();
+            foreach(var item in rectaclesPoints)
+            {
+                DrawRectancles(item[0], item[1], false);
+            }
         }
     }
 }

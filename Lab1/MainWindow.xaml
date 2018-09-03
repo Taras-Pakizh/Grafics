@@ -6,7 +6,17 @@
         xmlns:local="clr-namespace:Lab1"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Canvas Name="MyCanvas" SizeChanged="MyCanvas_SizeChanged" Loaded="MyCanvas_Loaded">
+    <Grid MouseLeftButtonDown="Grid_MouseLeftButtonDown">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.9*"/>
+            <RowDefinition Height="0.1*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.1*"/>
+            <ColumnDefinition Width="0.9*"/>
+        </Grid.ColumnDefinitions>
+        <Canvas Background="Black" Focusable="True" Grid.ColumnSpan="2" IsHitTestVisible="True" Name="MyCanvas" SizeChanged="MyCanvas_SizeChanged" Loaded="MyCanvas_Loaded" Grid.Row="0"/>
         
-    </Canvas>
+        <Button Grid.Row="1" Content="Clear" Click="Button_Click" Grid.Column="1"/>
+    </Grid>
 </Window>

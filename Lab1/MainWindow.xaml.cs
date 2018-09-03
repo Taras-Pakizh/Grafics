@@ -13,6 +13,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using ColorPickerWPF;
+using ColorPickerWPF.Code;
+
 namespace Lab1
 {
     /// <summary>
@@ -58,9 +61,21 @@ namespace Lab1
                 Draw(HeightToDraw, WidthToDraw);
             }
         }
+        //Color
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            if(MyPicker.Visibility == Visibility.Visible)
+                MyPicker.Visibility = Visibility.Hidden;
+            else MyPicker.Visibility = Visibility.Visible;
+        }
+        private void MyPicker_OnPickColor(Color _color)
+        {
+            color = _color;
+            MyPicker.Visibility = Visibility.Hidden;
+        }
         #endregion
 
-        //Vars
+        #region Variables
         private double HeightToDraw;
         private double WidthToDraw;
         private int HorizontalDashes = 10;
@@ -68,6 +83,9 @@ namespace Lab1
         private List<Path> rectancles = new List<Path>();
         private List<Point[]> rectaclesPoints = new List<Point[]>();
         private Point temp = new Point(-1, -1);
+        private Color color;
+        Random random = new Random();
+        #endregion
 
         //Path
         private Path GetSolid()
@@ -215,6 +233,9 @@ namespace Lab1
             labelX.Content = "X";
             labelY.Content = "Y";
 
+            labelX.BorderBrush = Brushes.White;
+            labelY.BorderBrush = Brushes.White;
+
             labelX.Margin = new Thickness(WidthToDraw - 25, HeightToDraw / 2 - 25, 0, 0);
             labelY.Margin = new Thickness(WidthToDraw / 2 - 25, 25, 0, 0);
 
@@ -270,12 +291,29 @@ namespace Lab1
             figure1.Segments.Add(new PolyLineSegment(insideRectanclePoints, true));
             figure1.IsClosed = true;
 
-            var path = GetSolid();
-            var geo = new PathGeometry();
-            geo.Figures.Add(figure);
-            geo.Figures.Add(figure1);
-            path.Data = geo;
-            rectancles.Add(path);
+            var path1 = GetSolid();
+            path1.Fill = new SolidColorBrush(color);
+
+            var path2 = GetSolid();
+            byte[] colors = new byte[4];
+            random.NextBytes(colors);
+            Color randomColor = new Color()
+            {
+                A = colors[0],
+                B = colors[1],
+                R = colors[2],
+                G = colors[3]
+            };
+            path2.Fill = new SolidColorBrush(randomColor);
+
+            var geo1 = new PathGeometry();
+            var geo2 = new PathGeometry();
+            geo1.Figures.Add(figure);
+            geo2.Figures.Add(figure1);
+            path1.Data = geo1;
+            path2.Data = geo2;
+            rectancles.Add(path1);
+            rectancles.Add(path2);
         }
         private void TransformPointChangeSize(SizeChangedEventArgs args)
         {

@@ -1,12 +1,13 @@
-﻿<Window x:Class="Lab1.MainWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Lab1"
+        xmlns:ColorPickerWPF="clr-namespace:ColorPickerWPF;assembly=ColorPickerWPF" x:Class="Lab1.MainWindow"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid MouseLeftButtonDown="Grid_MouseLeftButtonDown">
+    <Grid Name="MyApp" MouseLeftButtonDown="Grid_MouseLeftButtonDown">
         <Grid.RowDefinitions>
             <RowDefinition Height="0.9*"/>
             <RowDefinition Height="0.1*"/>
@@ -15,8 +16,9 @@
             <ColumnDefinition Width="0.1*"/>
             <ColumnDefinition Width="0.9*"/>
         </Grid.ColumnDefinitions>
-        <Canvas Background="Black" Focusable="True" Grid.ColumnSpan="2" IsHitTestVisible="True" Name="MyCanvas" SizeChanged="MyCanvas_SizeChanged" Loaded="MyCanvas_Loaded" Grid.Row="0"/>
-        
-        <Button Grid.Row="1" Content="Clear" Click="Button_Click" Grid.Column="1"/>
+        <Canvas Background="Azure"  Focusable="True" Grid.ColumnSpan="2" IsHitTestVisible="True" x:Name="MyCanvas" SizeChanged="MyCanvas_SizeChanged" Loaded="MyCanvas_Loaded" Grid.Row="0"/>
+        <Button Grid.Row="1" Click="Button_Click" Grid.Column="1" Content="Clear"/>
+        <Button Grid.Row="1" Content="Color" Grid.Column="0" Click="Button_Click_1"/>
+        <ColorPickerWPF:ColorPickerControl Visibility="Hidden" Grid.ColumnSpan="2" Grid.RowSpan="2" Name="MyPicker" OnPickColor="MyPicker_OnPickColor"/>
     </Grid>
 </Window>

@@ -43,6 +43,7 @@ namespace Lab1
         {
             rectancles.Clear();
             rectaclesPoints.Clear();
+            VerticalDashes = 22;
             Draw(HeightToDraw, WidthToDraw);
         }
         private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -64,22 +65,43 @@ namespace Lab1
         //Color
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            if(MyPicker.Visibility == Visibility.Visible)
-                MyPicker.Visibility = Visibility.Hidden;
-            else MyPicker.Visibility = Visibility.Visible;
+            ColorPickWindow window = new ColorPickWindow();
+            window.Pick += Window_Pick;
+            window.Show();
         }
-        private void MyPicker_OnPickColor(Color _color)
+        private void Window_Pick(Color _color)
         {
             color = _color;
-            MyPicker.Visibility = Visibility.Hidden;
+        }
+        //Slider
+        private void SliderX_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            LabelX.Content = "Верхня ліва X: " + ((Slider)sender).Value;
+        }
+        private void SliderY_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            LabelY.Content = "Верхня ліва Y: " + ((Slider)sender).Value;
+        }
+        private void SliderX2_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            LabelX2.Content = "Верхня права X: " + ((Slider)sender).Value;
+        }
+        private void SliderY2_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            LabelY2.Content = "Верхня права Y: " + ((Slider)sender).Value;
+        }
+        //Add
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            TransformCoorPoints(SliderX.Value, SliderY.Value, SliderX2.Value, SliderY2.Value);
         }
         #endregion
 
         #region Variables
         private double HeightToDraw;
         private double WidthToDraw;
-        private int HorizontalDashes = 10;
-        private int VerticalDashes = 20;
+        private int HorizontalDashes;
+        private int VerticalDashes = 36;
         private List<Path> rectancles = new List<Path>();
         private List<Point[]> rectaclesPoints = new List<Point[]>();
         private Point temp = new Point(-1, -1);
@@ -153,21 +175,26 @@ namespace Lab1
         private PathFigure GetVerticalCoorLine()
         {
             PathFigure figure = new PathFigure();
-            figure.StartPoint = new Point(0, HeightToDraw / 2);
+
+            double step = WidthToDraw / VerticalDashes;
+            HorizontalDashes = (int)Math.Round(HeightToDraw / step);
+
+            figure.StartPoint = new Point(0, (HorizontalDashes / 2) * step);
             LineSegment line = new LineSegment();
-            line.Point = new Point(WidthToDraw, HeightToDraw / 2);
+            line.Point = new Point(WidthToDraw, (HorizontalDashes / 2) * step);
             figure.Segments.Add(line);
             return figure;
         }
         private List<PathFigure> GetHorizontalLines()
         {
-            if (HorizontalDashes % 2 != 0)
-                throw new Exception("Wrong");
+            //if (HorizontalDashes % 2 != 0)
+            //    throw new Exception("Wrong");
             List<PathFigure> figures = new List<PathFigure>();
-            double step = (HeightToDraw / 2) / ((HorizontalDashes / 2) + 1);
-            for(int i = 1; i < HorizontalDashes + 2; ++i)
+            double step = WidthToDraw / VerticalDashes;
+            HorizontalDashes = (int)Math.Round(HeightToDraw / step);
+            for (int i = 1; i < HorizontalDashes; ++i)
             {
-                if (i == (HorizontalDashes / 2) + 1) continue;
+                if (i == (HorizontalDashes / 2)) continue;
                 PathFigure figure = new PathFigure();
                 figure.StartPoint = new Point(0, i * step);
                 LineSegment line = new LineSegment();
@@ -182,10 +209,10 @@ namespace Lab1
             if (VerticalDashes % 2 != 0)
                 throw new Exception("Wrong");
             List<PathFigure> figures = new List<PathFigure>();
-            double step = (WidthToDraw / 2) / ((VerticalDashes / 2) + 1);
-            for (int i = 1; i < VerticalDashes + 2; ++i)
+            double step = WidthToDraw / VerticalDashes;
+            for (int i = 1; i < VerticalDashes; ++i)
             {
-                if (i == (VerticalDashes / 2) + 1) continue;
+                if (i == (VerticalDashes / 2)) continue;
                 PathFigure figure = new PathFigure();
                 figure.StartPoint = new Point(i * step, 0);
                 LineSegment line = new LineSegment();
@@ -337,6 +364,43 @@ namespace Lab1
             {
                 DrawRectancles(item[0], item[1], false);
             }
+        }
+        private void TransformCoorPoints(double x1, double y1, double x2, double y2)
+        {
+            if (x1 == x2 && y1 == y2) return;
+
+            if (VerticalDashes / 2 < Math.Abs(x1))
+                VerticalDashes = 2 * (int)Math.Abs(x1);
+            if (VerticalDashes / 2 < Math.Abs(x2))
+                VerticalDashes = 2 * (int)Math.Abs(x2);
+            if (VerticalDashes / 4 <= Math.Abs(y1))
+                VerticalDashes = (int)(Math.Abs(y1) * 4) + 1;
+            if (VerticalDashes / 4 <= Math.Abs(y2))
+                VerticalDashes = (int)(Math.Abs(y2) * 4) + 1;
+            if (VerticalDashes % 2 != 0)
+                ++VerticalDashes;
+            double step = WidthToDraw / VerticalDashes;
+            HorizontalDashes = (int)Math.Round(HeightToDraw / step);
+
+            x1 += VerticalDashes / 2;
+            y1 = (-y1) + (HorizontalDashes / 2);
+            x2 += VerticalDashes / 2;
+            y2 = (-y2) + (HorizontalDashes / 2);
+            double delta = step;
+            Point pointLeft = new Point()
+            {
+                X = (x1 * delta),
+                Y = (y1 * delta)
+            };
+            Point pointRight = new Point()
+            {
+                X = (x2 * delta),
+                Y = (y2 * delta)
+            };
+            if (pointLeft.X <= pointRight.X)
+                DrawRectancles(pointLeft, pointRight, true);
+            else DrawRectancles(pointRight, pointLeft, true);
+            Draw(HeightToDraw, WidthToDraw);
         }
     }
 }

@@ -98,34 +98,12 @@ namespace Lab1
         #endregion
 
         #region Variables
-        private double HeightToDraw;
-        private double WidthToDraw;
-        private int HorizontalDashes;
-        private int VerticalDashes = 36;
-        private List<Path> rectancles = new List<Path>();
-        private List<Point[]> rectaclesPoints = new List<Point[]>();
         private Point temp = new Point(-1, -1);
         private Color color;
         Random random = new Random();
         #endregion
 
-        //Path
-        private Path GetSolid()
-        {
-            Path lines = new Path();
-            lines.Stroke = Brushes.Aquamarine;
-            lines.StrokeThickness = 2;
-            return lines;
-        }
-        private Path GetDashed()
-        {
-            Path dashes = new Path();
-            dashes.Stroke = Brushes.Aquamarine;
-            dashes.StrokeDashCap = PenLineCap.Round;
-            dashes.StrokeDashArray = new DoubleCollection(new double[] { 20, 10 });
-            return dashes;
-        }
-
+        
         //Background
         private void Draw(double _Height, double _Width)
         {
@@ -341,29 +319,6 @@ namespace Lab1
             path2.Data = geo2;
             rectancles.Add(path1);
             rectancles.Add(path2);
-        }
-        private void TransformPointChangeSize(SizeChangedEventArgs args)
-        {
-            for(int i = 0; i < rectaclesPoints.Count; ++i)
-            {
-                for(int index = 0; index < rectaclesPoints[i].Length; ++index)
-                {
-                    rectaclesPoints[i][index] = new Point()
-                    {
-                        X = rectaclesPoints[i][index].X * (args.NewSize.Width / args.PreviousSize.Width),
-                        Y = rectaclesPoints[i][index].Y * (args.NewSize.Height / args.PreviousSize.Height)
-                    };
-                }
-            }
-            TransformRectancle();
-        }
-        private void TransformRectancle()
-        {
-            rectancles.Clear();
-            foreach(var item in rectaclesPoints)
-            {
-                DrawRectancles(item[0], item[1], false);
-            }
         }
         private void TransformCoorPoints(double x1, double y1, double x2, double y2)
         {

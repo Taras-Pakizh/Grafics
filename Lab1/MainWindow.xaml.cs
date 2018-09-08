@@ -31,20 +31,17 @@ namespace Lab1
         #region Events
         private void MyCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            TransformPointChangeSize(e);
-            Draw(e.NewSize.Height, e.NewSize.Width);
+            Draw(GetStep());
         }
         private void MyCanvas_Loaded(object sender, RoutedEventArgs e)
         {
-            Height++;
+            Draw(GetStep());
         }
         //Clear
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            rectancles.Clear();
-            rectaclesPoints.Clear();
-            VerticalDashes = 22;
-            Draw(HeightToDraw, WidthToDraw);
+            rectancleInfos.Clear();
+            Draw(GetStep());
         }
         private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -55,11 +52,12 @@ namespace Lab1
             else
             {
                 Point point = e.GetPosition(MyCanvas);
+                CanvasInfo info = new CanvasInfo(MyCanvas.ActualWidth, MyCanvas.ActualHeight, GetStep());
                 if (temp.X <= point.X)
-                    DrawRectancles(temp, point, true);
-                else DrawRectancles(point, temp, true);
+                    AddRectancle(PointConverter.ToCoor(temp, info), PointConverter.ToCoor(point, info), color);
+                else AddRectancle(PointConverter.ToCoor(point, info), PointConverter.ToCoor(temp, info), color);
                 temp = new Point(-1, -1);
-                Draw(HeightToDraw, WidthToDraw);
+                Draw(GetStep());
             }
         }
         //Color
@@ -93,269 +91,109 @@ namespace Lab1
         //Add
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            TransformCoorPoints(SliderX.Value, SliderY.Value, SliderX2.Value, SliderY2.Value);
+            AddRectancle(
+                new Point()
+                {
+                    X = SliderX.Value,
+                    Y = SliderY.Value
+                }, new Point()
+                {
+                    X = SliderX2.Value,
+                    Y = SliderY2.Value
+                },
+                color
+            );
+            Draw(GetStep());
         }
         #endregion
 
         #region Variables
         private Point temp = new Point(-1, -1);
         private Color color;
-        Random random = new Random();
-        #endregion
-
-        
-        //Background
-        private void Draw(double _Height, double _Width)
-        {
-            HeightToDraw = _Height;
-            WidthToDraw = _Width;
-
-            Path lines = GetSolid();
-            Path dashes = GetDashed();
-            PathGeometry pathGeoLines = new PathGeometry();
-            PathGeometry pathGeoDashes = new PathGeometry();
-
-            pathGeoLines.Figures.Add(GetHorixontalCoorLine());
-            pathGeoLines.Figures.Add(GetVerticalCoorLine());
-            pathGeoLines.Figures.Add(GetXArrow());
-            pathGeoLines.Figures.Add(GetYArrow());
-
-            var horizontalLines = GetHorizontalLines();
-            var verticalLines = GetVerticalLines();
-            foreach (var figure in horizontalLines)
-                pathGeoDashes.Figures.Add(figure);
-            foreach (var figure in verticalLines)
-                pathGeoDashes.Figures.Add(figure);
-
-            lines.Data = pathGeoLines;
-            dashes.Data = pathGeoDashes;
-
-            MyCanvas.Children.Clear();
-            MyCanvas.Children.Add(lines);
-            MyCanvas.Children.Add(dashes);
-            var labels = GetLabels();
-            foreach (var label in labels)
-                MyCanvas.Children.Add(label);
-            foreach (var item in rectancles)
-                MyCanvas.Children.Add(item);
-        }
-
-        #region Figures
-        private PathFigure GetHorixontalCoorLine()
-        {
-            PathFigure figure = new PathFigure();
-            figure.StartPoint = new Point(WidthToDraw / 2, 0);
-            LineSegment line = new LineSegment();
-            line.Point = new Point(WidthToDraw / 2, HeightToDraw);
-            figure.Segments.Add(line);
-            return figure;
-        }
-        private PathFigure GetVerticalCoorLine()
-        {
-            PathFigure figure = new PathFigure();
-
-            double step = WidthToDraw / VerticalDashes;
-            HorizontalDashes = (int)Math.Round(HeightToDraw / step);
-
-            figure.StartPoint = new Point(0, (HorizontalDashes / 2) * step);
-            LineSegment line = new LineSegment();
-            line.Point = new Point(WidthToDraw, (HorizontalDashes / 2) * step);
-            figure.Segments.Add(line);
-            return figure;
-        }
-        private List<PathFigure> GetHorizontalLines()
-        {
-            //if (HorizontalDashes % 2 != 0)
-            //    throw new Exception("Wrong");
-            List<PathFigure> figures = new List<PathFigure>();
-            double step = WidthToDraw / VerticalDashes;
-            HorizontalDashes = (int)Math.Round(HeightToDraw / step);
-            for (int i = 1; i < HorizontalDashes; ++i)
-            {
-                if (i == (HorizontalDashes / 2)) continue;
-                PathFigure figure = new PathFigure();
-                figure.StartPoint = new Point(0, i * step);
-                LineSegment line = new LineSegment();
-                line.Point = new Point(WidthToDraw, i * step);
-                figure.Segments.Add(line);
-                figures.Add(figure);
-            }
-            return figures;
-        }
-        private List<PathFigure> GetVerticalLines()
-        {
-            if (VerticalDashes % 2 != 0)
-                throw new Exception("Wrong");
-            List<PathFigure> figures = new List<PathFigure>();
-            double step = WidthToDraw / VerticalDashes;
-            for (int i = 1; i < VerticalDashes; ++i)
-            {
-                if (i == (VerticalDashes / 2)) continue;
-                PathFigure figure = new PathFigure();
-                figure.StartPoint = new Point(i * step, 0);
-                LineSegment line = new LineSegment();
-                line.Point = new Point(i * step, HeightToDraw);
-                figure.Segments.Add(line);
-                figures.Add(figure);
-            }
-            return figures;
-        }
-        private PathFigure GetXArrow()
-        {
-            PathFigure figure = new PathFigure();
-            double arrowHeight = HeightToDraw / 75;
-            double arrowWidth = WidthToDraw / 60;
-            figure.StartPoint = new Point(WidthToDraw - arrowWidth, HeightToDraw / 2 - arrowHeight);
-            Point[] points = new Point[]
-            {
-                new Point(WidthToDraw, HeightToDraw / 2),
-                new Point(WidthToDraw - arrowWidth, HeightToDraw / 2 + arrowHeight)
-            };
-            PolyLineSegment segment = new PolyLineSegment(points, true);
-            figure.Segments.Add(segment);
-            return figure;
-        }
-        private PathFigure GetYArrow()
-        {
-            PathFigure figure = new PathFigure();
-            double arrowHeight = WidthToDraw / 60;
-            double arrowWidth = HeightToDraw / 75;
-            figure.StartPoint = new Point(WidthToDraw / 2 - arrowWidth, arrowHeight);
-            Point[] points = new Point[]
-            {
-                new Point(WidthToDraw / 2, 0),
-                new Point(WidthToDraw / 2 + arrowWidth, arrowHeight)
-            };
-            PolyLineSegment segment = new PolyLineSegment(points, true);
-            figure.Segments.Add(segment);
-            return figure;
-        }
-        private List<Label> GetLabels()
-        {
-            Label labelX = new Label();
-            Label labelY = new Label();
-
-            labelX.Content = "X";
-            labelY.Content = "Y";
-
-            labelX.BorderBrush = Brushes.White;
-            labelY.BorderBrush = Brushes.White;
-
-            labelX.Margin = new Thickness(WidthToDraw - 25, HeightToDraw / 2 - 25, 0, 0);
-            labelY.Margin = new Thickness(WidthToDraw / 2 - 25, 25, 0, 0);
-
-            return new List<Label>()
-            {
-                labelX,
-                labelY
-            };
-        }
+        private List<RectancleInfo> rectancleInfos = new List<RectancleInfo>();
+        private List<Path> SavedRectancles = new List<Path>();
+        private int maxStep = 50;
         #endregion
 
         //Logic
-        private void DrawRectancles(Point leftUp, Point rightUp, bool New)
+        private double GetStep()
         {
-            if(New == true)
-                rectaclesPoints.Add(new Point[] { leftUp, rightUp });
-
-            double Xdelta = Math.Abs(leftUp.X - rightUp.X);
-            double Ydelta = Math.Abs(leftUp.Y - rightUp.Y);
+            double step = maxStep;
+            foreach (var item in rectancleInfos)
+            {
+                var points = GetRectancleCoor(item);
+                foreach(var point in points)
+                {
+                    if(Math.Abs(point.X) > MyCanvas.ActualWidth / step / 2)
+                        step = MyCanvas.ActualWidth / (Math.Round(Math.Abs(point.X)) + 1) / 2;
+                    if (Math.Abs(point.Y) > MyCanvas.ActualHeight / step / 2)
+                        step = MyCanvas.ActualHeight / (Math.Round(Math.Abs(point.Y)) + 1) / 2;
+                }
+            }
+            return step;
+        }
+        private Point[] GetRectancleCoor(RectancleInfo info)
+        {
+            double Xdelta = Math.Abs(info.leftUp.X - info.rightUp.X);
+            double Ydelta = Math.Abs(info.leftUp.Y - info.rightUp.Y);
             Point[] rectanclePoints = null;
-            if(leftUp.Y >= rightUp.Y)
+            if (info.leftUp.Y <= info.rightUp.Y)
             {
                 rectanclePoints = new Point[]
                 {
-                    rightUp,
-                    new Point(rightUp.X + Ydelta, rightUp.Y + Xdelta),
-                    new Point(leftUp.X + Ydelta, leftUp.Y + Xdelta),
+                    info.leftUp,
+                    info.rightUp,
+                    new Point(info.rightUp.X + Ydelta, info.rightUp.Y - Xdelta),
+                    new Point(info.leftUp.X + Ydelta, info.leftUp.Y - Xdelta),
                 };
             }
             else
             {
                 rectanclePoints = new Point[]
                 {
-                    rightUp,
-                    new Point(rightUp.X - Ydelta, rightUp.Y + Xdelta),
-                    new Point(leftUp.X - Ydelta, leftUp.Y + Xdelta),
+                    info.leftUp,
+                    info.rightUp,
+                    new Point(info.rightUp.X - Ydelta, info.rightUp.Y - Xdelta),
+                    new Point(info.leftUp.X - Ydelta, info.leftUp.Y - Xdelta),
                 };
             }
-            Point[] insideRectanclePoints = new Point[]
-            {
-                 new Point((rightUp.X + rectanclePoints[1].X) / 2, (rightUp.Y + rectanclePoints[1].Y) / 2),
-                 new Point((rectanclePoints[1].X + rectanclePoints[2].X) / 2, (rectanclePoints[1].Y + rectanclePoints[2].Y) / 2),
-                 new Point((rectanclePoints[2].X + leftUp.X) / 2, (rectanclePoints[2].Y + leftUp.Y) / 2),
-            };
-
-            PathFigure figure = new PathFigure();
-            figure.StartPoint = leftUp;
-            figure.Segments.Add(new PolyLineSegment(rectanclePoints, true));
-            figure.IsClosed = true;
-
-            PathFigure figure1 = new PathFigure();
-            figure1.StartPoint = new Point() { X = (leftUp.X + rightUp.X) / 2, Y = (leftUp.Y + rightUp.Y) / 2};
-            figure1.Segments.Add(new PolyLineSegment(insideRectanclePoints, true));
-            figure1.IsClosed = true;
-
-            var path1 = GetSolid();
-            path1.Fill = new SolidColorBrush(color);
-
-            var path2 = GetSolid();
-            byte[] colors = new byte[4];
-            random.NextBytes(colors);
-            Color randomColor = new Color()
-            {
-                A = colors[0],
-                B = colors[1],
-                R = colors[2],
-                G = colors[3]
-            };
-            path2.Fill = new SolidColorBrush(randomColor);
-
-            var geo1 = new PathGeometry();
-            var geo2 = new PathGeometry();
-            geo1.Figures.Add(figure);
-            geo2.Figures.Add(figure1);
-            path1.Data = geo1;
-            path2.Data = geo2;
-            rectancles.Add(path1);
-            rectancles.Add(path2);
+            return rectanclePoints;
         }
-        private void TransformCoorPoints(double x1, double y1, double x2, double y2)
+
+        private void Draw(double _step)
         {
-            if (x1 == x2 && y1 == y2) return;
+            CanvasInfo info = new CanvasInfo(MyCanvas.ActualWidth, MyCanvas.ActualHeight, _step);
+            GraficsCreator creator = new GraficsCreator(info);
+            var lines = creator.DrawBackground();
 
-            if (VerticalDashes / 2 < Math.Abs(x1))
-                VerticalDashes = 2 * (int)Math.Abs(x1);
-            if (VerticalDashes / 2 < Math.Abs(x2))
-                VerticalDashes = 2 * (int)Math.Abs(x2);
-            if (VerticalDashes / 4 <= Math.Abs(y1))
-                VerticalDashes = (int)(Math.Abs(y1) * 4) + 1;
-            if (VerticalDashes / 4 <= Math.Abs(y2))
-                VerticalDashes = (int)(Math.Abs(y2) * 4) + 1;
-            if (VerticalDashes % 2 != 0)
-                ++VerticalDashes;
-            double step = WidthToDraw / VerticalDashes;
-            HorizontalDashes = (int)Math.Round(HeightToDraw / step);
+            var rectancles = creator.DrawRectancles(rectancleInfos);
+            int i = 0;
+            foreach(var path in rectancles)
+            {
+                if(SavedRectancles.Count <= i)
+                    SavedRectancles.Add(path);
+                else
+                    SavedRectancles[i].Data = path.Data;
+                ++i;
+            }
 
-            x1 += VerticalDashes / 2;
-            y1 = (-y1) + (HorizontalDashes / 2);
-            x2 += VerticalDashes / 2;
-            y2 = (-y2) + (HorizontalDashes / 2);
-            double delta = step;
-            Point pointLeft = new Point()
+            var labels = creator.DrawLabels();
+            MyCanvas.Children.Clear();
+            foreach (var item in lines)
+                MyCanvas.Children.Add(item);
+            foreach (var item in SavedRectancles)
+                MyCanvas.Children.Add(item);
+            foreach (var item in labels)
+                MyCanvas.Children.Add(item);
+        }
+        private void AddRectancle(Point left, Point right, Color _color)
+        {
+            rectancleInfos.Add(new RectancleInfo()
             {
-                X = (x1 * delta),
-                Y = (y1 * delta)
-            };
-            Point pointRight = new Point()
-            {
-                X = (x2 * delta),
-                Y = (y2 * delta)
-            };
-            if (pointLeft.X <= pointRight.X)
-                DrawRectancles(pointLeft, pointRight, true);
-            else DrawRectancles(pointRight, pointLeft, true);
-            Draw(HeightToDraw, WidthToDraw);
+                leftUp = left,
+                rightUp = right,
+                brush = new SolidColorBrush(_color)
+            });
         }
     }
 }

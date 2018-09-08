@@ -10,6 +10,8 @@ namespace Lab1
 {
     class RectancleCreator : IFiguresCreator
     {
+        public RectancleInfo newRectancle { get; set; }
+
         public PathGeometry GetFigures(CanvasInfo info)
         {
             PathGeometry geometry = new PathGeometry();
@@ -39,8 +41,63 @@ namespace Lab1
                 };
             }
             rectancle.Segments.Add(new PolyLineSegment(rectanclePoints, true));
+            rectancle.IsClosed = true;
+            geometry.Figures.Add(rectancle);
+
+            List<Point> newRect = new List<Point>();
+            newRect.Add(info.leftUp);
+            newRect.AddRange(rectanclePoints);
+            if(newRectancle == null)
+                SetNewRectancle(newRect);
 
             return geometry;
+        }
+
+        private void SetNewRectancle(IList<Point> points)
+        {
+            Random random = new Random();
+            byte[] colors = new byte[4];
+            random.NextBytes(colors);
+            Color randomColor = new Color()
+            {
+                A = colors[0],
+                B = colors[1],
+                R = colors[2],
+                G = colors[3]
+            };
+            Point left, right;
+            if(points[0].Y <= points[1].Y)
+            {
+                left = new Point()
+                {
+                    X = (points[3].X + points[0].X) / 2,
+                    Y = (points[3].Y + points[0].Y) / 2
+                };
+                right = new Point()
+                {
+                    X = (points[0].X + points[1].X) / 2,
+                    Y = (points[0].Y + points[1].Y) / 2
+                };
+            }
+            else
+            {
+                left = new Point()
+                {
+                    X = (points[0].X + points[1].X) / 2,
+                    Y = (points[0].Y + points[1].Y) / 2
+                };
+                right = new Point()
+                {
+                    X = (points[1].X + points[2].X) / 2,
+                    Y = (points[1].Y + points[2].Y) / 2
+                };
+            }
+            newRectancle = new RectancleInfo()
+            {
+                leftUp = left,
+                rightUp = right,
+                brush = new SolidColorBrush(randomColor)
+            };
         }
     }
 }

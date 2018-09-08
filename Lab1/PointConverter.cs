@@ -14,7 +14,7 @@ namespace Lab1
             return new Point()
             {
                 X = info.WidthCenter + (info.Step * point.X),
-                Y = info.HeigthCenter + (info.Step * point.Y)
+                Y = info.HeigthCenter - (info.Step * point.Y)
             };
         }
 

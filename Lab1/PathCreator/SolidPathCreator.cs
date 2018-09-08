@@ -13,7 +13,7 @@ namespace Lab1
         public Path GetPath(Brush brush)
         {
             Path path = new Path();
-            path.Stroke = brush;
+            path.Stroke = Brushes.Aquamarine;
             path.Fill = brush;
             path.StrokeThickness = 2;
             return path;

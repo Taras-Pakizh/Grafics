@@ -37,7 +37,7 @@ namespace Lab1
             labelX.BorderBrush = Brushes.White;
             labelY.BorderBrush = Brushes.White;
 
-            labelX.Margin = new Thickness(info.Width - 25, info.Heigth / 2 - 25, 0, 0);
+            labelX.Margin = new Thickness(info.Width - 25, info.Heigth / 2 + 15, 0, 0);
             labelY.Margin = new Thickness(info.Width / 2 - 25, 25, 0, 0);
 
             return new List<Label>()
@@ -56,13 +56,13 @@ namespace Lab1
                 {
                     BorderBrush = Brushes.White,
                     Content = "-" + i,
-                    Margin = new Thickness(info.WidthCenter - (info.Step * i), info.Heigth - 25, 0, 0)
+                    Margin = new Thickness(info.WidthCenter - (info.Step * i), info.HeigthCenter - 25, 0, 0)
                 });
                 result.Add(new Label()
                 {
                     BorderBrush = Brushes.White,
                     Content = i,
-                    Margin = new Thickness(info.WidthCenter + (info.Step * i), info.Heigth - 25, 0, 0)
+                    Margin = new Thickness(info.WidthCenter + (info.Step * i), info.HeigthCenter - 25, 0, 0)
                 });
             }
             return result;
@@ -77,13 +77,13 @@ namespace Lab1
                 {
                     BorderBrush = Brushes.White,
                     Content = i,
-                    Margin = new Thickness(info.WidthCenter - 25, info.HeigthCenter - (info.Step * i), 0, 0)
+                    Margin = new Thickness(info.WidthCenter, info.HeigthCenter - (info.Step * i), 0, 0)
                 });
                 result.Add(new Label()
                 {
                     BorderBrush = Brushes.White,
                     Content = "-" + i,
-                    Margin = new Thickness(info.WidthCenter - 25, info.HeigthCenter + (info.Step * i), 0, 0)
+                    Margin = new Thickness(info.WidthCenter, info.HeigthCenter + (info.Step * i), 0, 0)
                 });
             }
             return result;

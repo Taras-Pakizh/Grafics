@@ -43,7 +43,7 @@ namespace Lab1
 
         public IEnumerable<Path> DrawRectancles(IEnumerable<RectancleInfo> rectancles)
         {
-            IFiguresCreator figureCreator = new RectancleCreator();
+            RectancleCreator figureCreator = new RectancleCreator();
             IPathCreator pathCreator = new SolidPathCreator();
             List<Path> paths = new List<Path>();
             foreach(var item in rectancles)
@@ -52,6 +52,11 @@ namespace Lab1
                 path.Data = figureCreator.GetFigures(info.CopyWithPoints(
                     PointConverter.ToCanvas(item.leftUp, info), PointConverter.ToCanvas(item.rightUp, info)));
                 paths.Add(path);
+                Path newpath = pathCreator.GetPath(figureCreator.newRectancle.brush);
+                newpath.Data = figureCreator.GetFigures(info.CopyWithPoints(
+                    figureCreator.newRectancle.leftUp, figureCreator.newRectancle.rightUp));
+                paths.Add(newpath);
+                figureCreator.newRectancle = null;
             }
             return paths;
         }

@@ -14,8 +14,8 @@ namespace Lab1
         public PathGeometry GetFigures(CanvasInfo info)
         {
             PathGeometry geometry = new PathGeometry();
-            int dashesXCount = (int)(info.WidthCenter / info.Step);
-            int dashesYCount = (int)(info.HeigthCenter / info.Step);
+            int dashesXCount = (int)(info.HeigthCenter / info.Step);
+            int dashesYCount = (int)(info.WidthCenter / info.Step);
             for(int i = 1; i < dashesXCount + 1; ++i)
             {
                 PathFigure up = new PathFigure()

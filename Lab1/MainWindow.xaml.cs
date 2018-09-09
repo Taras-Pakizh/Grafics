@@ -29,18 +29,13 @@ namespace Lab1
         }
 
         #region Events
+        //Canvas
         private void MyCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             Draw(GetStep());
         }
         private void MyCanvas_Loaded(object sender, RoutedEventArgs e)
         {
-            Draw(GetStep());
-        }
-        //Clear
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            rectancleInfos.Clear();
             Draw(GetStep());
         }
         private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -60,37 +55,32 @@ namespace Lab1
                 Draw(GetStep());
             }
         }
-        //Color
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            ColorPickWindow window = new ColorPickWindow();
-            window.Pick += Window_Pick;
-            window.Show();
-        }
-        private void Window_Pick(Color _color)
-        {
-            color = _color;
-        }
         //Slider
         private void SliderX_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            LabelX.Content = "Верхня ліва X: " + ((Slider)sender).Value;
+            LabelX.Content = "Upper left point X: " + Math.Round(((Slider)sender).Value, 2);
         }
         private void SliderY_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            LabelY.Content = "Верхня ліва Y: " + ((Slider)sender).Value;
+            LabelY.Content = "Upper left point Y: " + Math.Round(((Slider)sender).Value, 2);
         }
         private void SliderX2_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            LabelX2.Content = "Верхня права X: " + ((Slider)sender).Value;
+            LabelX2.Content = "Upper right point X: " + Math.Round(((Slider)sender).Value, 2);
         }
         private void SliderY2_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            LabelY2.Content = "Верхня права Y: " + ((Slider)sender).Value;
+            LabelY2.Content = "Upper right point Y: " + Math.Round(((Slider)sender).Value, 2);
         }
-        //Add
-        private void Button_Click_2(object sender, RoutedEventArgs e)
+        //Menu
+        private void AddItem_Click(object sender, RoutedEventArgs e)
         {
+            if (!IsPointsCorrect())
+            {
+                ErrorWindow window = new ErrorWindow();
+                window.Show();
+                return;
+            }
             AddRectancle(
                 new Point()
                 {
@@ -105,7 +95,37 @@ namespace Lab1
             );
             Draw(GetStep());
         }
+        private void AuthorItem_Click(object sender, RoutedEventArgs e)
+        {
+            InfoWindow window = new InfoWindow();
+            window.Show();
+        }
+        private void UndoItem_Click(object sender, RoutedEventArgs e)
+        {
+            UndoRectancle();
+            Draw(GetStep());
+        }
+        private void RedoItem_Click(object sender, RoutedEventArgs e)
+        {
+            RedoRectancle();
+            Draw(GetStep());
+        }
+        private void DeleteItem_Click(object sender, RoutedEventArgs e)
+        {
+            rectancleInfos.Clear();
+            SavedRectancles.Clear();
+            RemovedPaths.Clear();
+            RemovedRectancles.Clear();
+            Draw(GetStep());
+        }
+        private void ColorItem_Click(object sender, RoutedEventArgs e)
+        {
+            ColorPickWindow window = new ColorPickWindow();
+            window.Pick += Window_Pick;
+            window.Show();
+        }
         #endregion
+
 
         #region Variables
         private Point temp = new Point(-1, -1);
@@ -113,9 +133,12 @@ namespace Lab1
         private List<RectancleInfo> rectancleInfos = new List<RectancleInfo>();
         private List<Path> SavedRectancles = new List<Path>();
         private int maxStep = 50;
+        private List<Path> RemovedPaths = new List<Path>();
+        private List<RectancleInfo> RemovedRectancles = new List<RectancleInfo>();
         #endregion
 
-        //Logic
+
+        #region Logic
         private double GetStep()
         {
             double step = maxStep;
@@ -159,7 +182,6 @@ namespace Lab1
             }
             return rectanclePoints;
         }
-
         private void Draw(double _step)
         {
             CanvasInfo info = new CanvasInfo(MyCanvas.ActualWidth, MyCanvas.ActualHeight, _step);
@@ -195,5 +217,36 @@ namespace Lab1
                 brush = new SolidColorBrush(_color)
             });
         }
+        private void UndoRectancle()
+        {
+            if (rectancleInfos.Count < 1 || SavedRectancles.Count < 2) return;
+            RemovedPaths.AddRange(SavedRectancles.Skip(SavedRectancles.Count - 2));
+            SavedRectancles.RemoveRange(SavedRectancles.Count - 2, 2);
+            RemovedRectancles.Add(rectancleInfos.Last());
+            rectancleInfos.RemoveAt(rectancleInfos.Count - 1);
+        }
+        private void RedoRectancle()
+        {
+            if (RemovedRectancles.Count < 1 || RemovedPaths.Count < 2) return;
+            SavedRectancles.AddRange(RemovedPaths.Skip(RemovedPaths.Count - 2));
+            RemovedPaths.RemoveRange(RemovedPaths.Count - 2, 2);
+            rectancleInfos.Add(RemovedRectancles.Last());
+            RemovedRectancles.RemoveAt(RemovedRectancles.Count - 1);
+        }
+
+        private void Window_Pick(Color _color)
+        {
+            color = _color;
+        }
+        private bool IsPointsCorrect()
+        {
+            bool result = true;
+            if (Math.Round(SliderX.Value, 2) == Math.Round(SliderX2.Value, 2) && 
+                Math.Round(SliderY.Value, 2) == Math.Round(SliderY2.Value, 2))
+                result = false;
+            return result;
+        }
+        #endregion
+
     }
 }

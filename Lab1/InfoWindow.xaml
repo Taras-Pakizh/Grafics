@@ -5,8 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Lab1"
         mc:Ignorable="d"
-        Title="InfoWindow" Height="204.176" Width="506.433">
+        Title="Author" Height="204.176" Width="506.433">
     <Grid>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.2*"/>
+            <RowDefinition Height="0.2*"/>
+            <RowDefinition Height="0.2*"/>
+            <RowDefinition Height="0.2*"/>
+            <RowDefinition Height="0.2*"/>
+        </Grid.RowDefinitions>
+        
+        <Label Content="Autor: Taras Pakizh" HorizontalAlignment="Center" Grid.Row="0"></Label>
+        <Label Content="Group: PZ-34" HorizontalAlignment="Center" Grid.Row="1"></Label>
+        <Label Content="Course: Compute Grafics, Lab №1" HorizontalAlignment="Center" Grid.Row="2"></Label>
+        <Label Content="Email: pakizht@gmail.com" HorizontalAlignment="Center" Grid.Row="3"></Label>
+        <Label Content="2018" HorizontalAlignment="Center" Grid.Row="4"></Label>
     </Grid>
 </Window>

@@ -13,10 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using ColorPickerWPF;
-using ColorPickerWPF.Code;
-
-namespace Lab1
+namespace Lab3
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
@@ -27,7 +24,5 @@ namespace Lab1
         {
             InitializeComponent();
         }
-
-
     }
 }

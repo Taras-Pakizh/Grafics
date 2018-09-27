@@ -8,11 +8,11 @@
 *.exe
 *.sln
 *.config
-Lab1/obj/
-Lab1/Properties/
-Lab1/bin/
-Lab1/Lab1.csproj
-Lab1/App.xaml.cs
-Lab1/App.xaml
+Lab3/obj/
+Lab3/Properties/
+Lab3/bin/
+Lab3/Lab3.csproj
+Lab3/App.xaml.cs
+Lab3/App.xaml
 packages/
 

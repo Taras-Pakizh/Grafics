@@ -2,6 +2,7 @@
 *.dll
 *.pdb
 *.suo
+*.png
 *.cache
 *.user
 *.exe

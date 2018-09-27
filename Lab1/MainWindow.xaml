@@ -6,46 +6,11 @@
         xmlns:local="clr-namespace:Lab1"
         xmlns:ColorPickerWPF="clr-namespace:ColorPickerWPF;assembly=ColorPickerWPF" x:Class="Lab1.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="667" Width="1200">
-    <Grid Name="MyApp" MouseLeftButtonDown="Grid_MouseLeftButtonDown">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="0.035*"/>
-            <RowDefinition Height="0.05*"/>
-            <RowDefinition Height="0.05*"/>
-            <RowDefinition Height="0.05*"/>
-            <RowDefinition Height="0.05*"/>
-            <RowDefinition Height="0.05*"/>
-            <RowDefinition Height="0.05*"/>
-            <RowDefinition Height="0.05*"/>
-            <RowDefinition Height="0.05*"/>
-            <RowDefinition Height="0.565*"/>
-            
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.15*"/>
-            <ColumnDefinition Width="0.85*"/>
-        </Grid.ColumnDefinitions>
-        
-        <Canvas Background="Azure"  Focusable="True" Grid.Row="1" Grid.RowSpan="9" IsHitTestVisible="True" x:Name="MyCanvas" SizeChanged="MyCanvas_SizeChanged" Loaded="MyCanvas_Loaded" Grid.Column="1"/>
+        Title="" Height="667" Width="1200">
+    <Grid Name="MyApp" Background="Azure">
 
-        <Menu Grid.ColumnSpan="2" Grid.Row="0" Name="MyMenu">
-            <MenuItem Header="Add" Name="AddItem" Click="AddItem_Click"></MenuItem>
-            <MenuItem Header="Author" Name="AuthorItem" Click="AuthorItem_Click"></MenuItem>
-            <MenuItem Header="Undo" Name="UndoItem" Click="UndoItem_Click"></MenuItem>
-            <MenuItem Header="Redo" Name="RedoItem" Click="RedoItem_Click"></MenuItem>
-            <MenuItem Header="Delete" Name="DeleteItem" Click="DeleteItem_Click"></MenuItem>
-            <MenuItem Header="Color" Name="ColorItem" Click="ColorItem_Click"></MenuItem>
-        </Menu>
-        
-        <Label Content="Upper left point X: 0" Grid.Row="1" Grid.Column="0" FontSize="13" Name="LabelX"/>
-        <Slider Grid.Row="2" Grid.Column="0" Name="SliderX" Minimum="-30" Maximum="30" SmallChange="1" LargeChange="1" ValueChanged="SliderX_ValueChanged"/>
-        <Label Content="Upper left point Y: 0" Grid.Row="3" Grid.Column="0" FontSize="13" Name="LabelY"/>
-        <Slider Grid.Row="4" Grid.Column="0" Name="SliderY" Minimum="-30" Maximum="30" SmallChange="1" LargeChange="1" ValueChanged="SliderY_ValueChanged"/>
-        <Label Content="Upper right point X: 0" Grid.Row="5" Grid.Column="0" FontSize="13" Name="LabelX2"/>
-        <Slider Grid.Row="6" Grid.Column="0" Name="SliderX2" Minimum="-30" Maximum="30" SmallChange="1" LargeChange="1" ValueChanged="SliderX2_ValueChanged"/>
-        <Label Content="Upper right point Y: 0" Grid.Row="7" Grid.Column="0" FontSize="13" Name="LabelY2"/>
-        <Slider Grid.Row="8" Grid.Column="0" Name="SliderY2" Minimum="-30" Maximum="30" SmallChange="1" LargeChange="1" ValueChanged="SliderY2_ValueChanged"/>
-        
-        
+
+        <Canvas Background="Azure"  Focusable="True" IsHitTestVisible="True" x:Name="MyCanvas"/>
+
     </Grid>
 </Window>

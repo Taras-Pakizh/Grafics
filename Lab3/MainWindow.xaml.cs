@@ -23,6 +23,14 @@ namespace Lab3
         public MainWindow()
         {
             InitializeComponent();
+            CanvasInfo info = new CanvasInfo(MyCanvas.ActualWidth, MyCanvas.ActualHeight, new Point(400, 200));
+            Path path = new Path();
+            path.Stroke = Brushes.Black;
+            path.StrokeThickness = 2;
+            Fractal fractal = new Peano(info);
+            fractal.CreateNextStages(4);
+            path.Data = fractal.TopGeometry();
+            MyCanvas.Children.Add(path);
         }
     }
 }

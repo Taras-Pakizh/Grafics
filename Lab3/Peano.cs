@@ -203,7 +203,7 @@ namespace Lab3
             double coof = minLimit / defaultSize;
             
             PathFigure newFigure = new PathFigure();
-            newFigure.StartPoint = ConvertToCanvas(newFigure.StartPoint, coof);
+            newFigure.StartPoint = ConvertToCanvas(figure.StartPoint, coof);
             PolyLineSegment newPolyline = new PolyLineSegment();
             for(int i = 0; i < polyline.Points.Count; ++i)
             {

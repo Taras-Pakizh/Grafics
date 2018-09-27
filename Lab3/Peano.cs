@@ -28,7 +28,7 @@ namespace Lab3
         public override Fractal CreateNextFractal(Fractal prevFractal)
         {
             Fractal result = new Peano(info, prevFractal.Stage + 1);
-            if (prevFractal == null)
+            if (prevFractal.Stage == 1)
             {
                 var newGeometry = CreateDeafaulFractal();
                 result.geometry = newGeometry;
@@ -37,7 +37,7 @@ namespace Lab3
             List<PathGeometry> newGeomeries = new List<PathGeometry>(4);
             for(int i = 0; i < 4; ++i)
             {
-                newGeomeries[i] = NextPositionFractal(prevFractal.geometry, (Directions)i);
+                newGeomeries.Add(NextPositionFractal(prevFractal.geometry, (Directions)i));
             }
             newGeomeries[0] = RoundFractal(newGeomeries[0], Sides.Right);
             newGeomeries[3] = RoundFractal(newGeomeries[3], Sides.Left);
@@ -165,7 +165,9 @@ namespace Lab3
                 changeX = -changeX;
 
             PolyLineSegment newPolyline = new PolyLineSegment();
-            var points = polyline.Points.Select(point => new Point(point.X + changeX, point.Y + changeY));
+            var points = polyline.Points.Select(point => new Point(point.X + changeX, point.Y + changeY)).ToArray();
+            foreach (var item in points)
+                newPolyline.Points.Add(item);
             PathFigure newFigure = new PathFigure();
             newFigure.IsClosed = false;
             newFigure.Segments.Add(newPolyline);

@@ -32,15 +32,26 @@ namespace Lab3
             Stage = stage;
         }
 
-        //Fractal
-        public override Fractal CreateNextFractal(Fractal prevFractal)
+        public override void CreateNextStages(int amoung)
         {
-            Fractal result = new Peano(info, prevFractal.Stage + 1);
-            if (prevFractal.Stage == 1)
+            if (amoung < 1) throw new IndexOutOfRangeException();
+            var currentFractal = TopFractal();
+            if (currentFractal.nextStage != null)
+                currentFractal = currentFractal.nextStage;
+            for (int i = 0; i < amoung; ++i)
             {
-                var newGeometry = CreateDeafaulFractal();
-                result.geometry = newGeometry;
-                return result;
+                currentFractal.geometry = CreateNextFractal(TopFractal());
+                currentFractal.nextStage = new Peano(info, currentFractal.Stage + 1);
+                currentFractal = currentFractal.nextStage;
+            }
+        }
+
+        //Fractal
+        public override PathGeometry CreateNextFractal(Fractal prevFractal)
+        {
+            if (prevFractal.Stage == 1 && prevFractal.geometry == null)
+            {
+                return CreateDeafaulFractal();
             }
             List<PathGeometry> newGeomeries = new List<PathGeometry>(4);
             for (int i = 0; i < newGeomeries.Capacity; ++i)
@@ -49,8 +60,7 @@ namespace Lab3
             newGeomeries[3] = RoundFractal(newGeomeries.Last(), Sides.Left);
             for (int i = 0; i < newGeomeries.Count; ++i)
                 newGeomeries[i] = NextPositionFractal(newGeomeries[i], (Directions)i, prevFractal);
-            result.geometry = UnionGeometries(newGeomeries);
-            return result;
+            return UnionGeometries(newGeomeries);
         }
 
         //Union geometry
@@ -152,7 +162,7 @@ namespace Lab3
         private PathGeometry NextPositionFractal(PathGeometry pathGeometry, Directions direction, Fractal prevFractal)
         {
             var figure = pathGeometry.Figures.First();
-            var changeX = Math.Pow(2, prevFractal.Stage - 1);
+            var changeX = Math.Pow(2, prevFractal.Stage);
             var changeY = changeX;
             var polyline = (PolyLineSegment)figure.Segments.First();
 

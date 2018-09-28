@@ -4,9 +4,29 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Lab3"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        mc:Ignorable="d" Height="450" Width="800">
     <Grid>
-        <Canvas Background="Azure" Focusable="True" x:Name="MyCanvas" SizeChanged="MyCanvas_SizeChanged"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.95*"/>
+            <RowDefinition Height="0.05*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.2*"/>
+            <ColumnDefinition Width="0.2*"/>
+            <ColumnDefinition Width="0.2*"/>
+            <ColumnDefinition Width="0.15*"/>
+            <ColumnDefinition Width="0.05*"/>
+            <ColumnDefinition Width="0.2*"/>
+        </Grid.ColumnDefinitions>
+        
+        <Button Grid.Row="1" Grid.Column="5" Name="BuildBut" Content="Build" Click="BuildBut_Click"/>
+        <Button Grid.Row="1" Grid.Column="2" Name="DeleteBut" Content="Delete" Click="DeleteBut_Click"/>
+        <Button Grid.Row="1" Grid.Column="0" Name="AddIterateBut" Content="Add iterete" Click="AddIterateBut_Click"/>
+        <Button Grid.Row="1" Grid.Column="1" Name="RemoveIterateBut" Content="Remove iterate" Click="RemoveIterateBut_Click"/>
+        <CheckBox Grid.Row="1" Grid.Column="3" Name="StepBySpepBox" Content="Step by Step" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="1" Grid.Column="4" Name="InputBox" BorderBrush="Black" Text="1" TextAlignment="Right"/>
+
+        <Canvas Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" Background="Azure" Focusable="True" x:Name="MyCanvas" SizeChanged="MyCanvas_SizeChanged"/>
     </Grid>
 </Window>

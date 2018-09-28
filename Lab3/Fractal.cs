@@ -39,29 +39,31 @@ namespace Lab3
                 Fractal result = this;
                 for(int i = 0; i < index; ++i)
                 {
-                    if (result.nextStage != null)
+                    if (result.nextStage != null && result.nextStage.geometry != null)
                         result = result.nextStage;
                     else throw new IndexOutOfRangeException();
                 }
-                return result.ScaleToCanvas();
+                if (result.geometry != null)
+                    return result.ScaleToCanvas();
+                else throw new ArgumentNullException();
             }
         }
-
-        public void CreateNextStages(int amoung)
+        public int Count
         {
-            if (amoung < 1) throw new IndexOutOfRangeException();
-            var currentFractal = TopFractal();
-            for(int i = 0; i < amoung; ++i)
+            get
             {
-                currentFractal.nextStage = CreateNextFractal(TopFractal());
-                currentFractal = currentFractal.nextStage;
+                var top = TopFractal();
+                int result = top.Stage;
+                if (top.geometry == null)
+                    result--;
+                return result;
             }
         }
 
         public PathGeometry TopGeometry()
         {
             Fractal result = this;
-            while (result.nextStage != null)
+            while (result.nextStage != null && result.nextStage.geometry != null)
             {
                 result = result.nextStage;
             }
@@ -71,15 +73,17 @@ namespace Lab3
         public Fractal TopFractal()
         {
             Fractal result = this;
-            while (result.nextStage != null)
+            while (result.nextStage != null && result.nextStage.geometry != null)
             {
                 result = result.nextStage;
             }
             return result;
         }
 
-        public abstract Fractal CreateNextFractal(Fractal prevFractal);
+        public abstract PathGeometry CreateNextFractal(Fractal prevFractal);
 
         public abstract PathGeometry ScaleToCanvas();
+
+        public abstract void CreateNextStages(int amoung);
     }
 }

@@ -35,12 +35,12 @@ namespace Lab3
                 return result;
             }
             List<PathGeometry> newGeomeries = new List<PathGeometry>(4);
-            for(int i = 0; i < 4; ++i)
-            {
-                newGeomeries.Add(NextPositionFractal(prevFractal.geometry, (Directions)i));
-            }
-            newGeomeries[0] = RoundFractal(newGeomeries[0], Sides.Right);
-            newGeomeries[3] = RoundFractal(newGeomeries[3], Sides.Left);
+            for (int i = 0; i < newGeomeries.Capacity; ++i)
+                newGeomeries.Add(prevFractal.geometry);
+            newGeomeries[0] = RoundFractal(newGeomeries.First(), Sides.Right);
+            newGeomeries[3] = RoundFractal(newGeomeries.Last(), Sides.Left);
+            for (int i = 0; i < newGeomeries.Count; ++i)
+                newGeomeries[i] = NextPositionFractal(newGeomeries[i], (Directions)i);
             result.geometry = UnionGeometries(newGeomeries);
             return result;
         }
@@ -113,8 +113,7 @@ namespace Lab3
         {
             var figure = pathGeometry.Figures.First();
             var polyline = (PolyLineSegment)figure.Segments.First();
-            var points = polyline.Points.Select(point => new Point(point.Y, point.X)).ToArray();
-            points = RoundPoints(points, side);
+            var points = RoundPoints(polyline.Points.ToArray(), side);
             PathFigure newFigure = new PathFigure();
             newFigure.StartPoint = RoundPoints(new Point[] { figure.StartPoint }, side).First();
             newFigure.IsClosed = false;
@@ -128,20 +127,12 @@ namespace Lab3
         }
         private Point[] RoundPoints(Point[] points, Sides side)
         {
+            points = points.Select(point => new Point(point.Y, point.X)).ToArray();
             for (int i = 0; i < points.Count(); ++i)
             {
-                if ((points[i].X < 0 && points[i].Y > 0) || (points[i].X > 0 && points[i].Y < 0))
-                {
-                    if (side == Sides.Left)
-                        points[i].Y = -points[i].Y;
-                    else points[i].X = -points[i].X;
-                }
-                if ((points[i].X > 0 && points[i].Y > 0) || (points[i].X < 0 && points[i].Y < 0))
-                {
-                    if (side == Sides.Left)
-                        points[i].X = -points[i].X;
-                    else points[i].Y = -points[i].Y;
-                }
+                if (side == Sides.Left)
+                    points[i].X = -points[i].X;
+                else points[i].Y = -points[i].Y;
             }
             return points;
         }
@@ -159,7 +150,7 @@ namespace Lab3
             var changeY = changeX;
             var polyline = (PolyLineSegment)figure.Segments.First();
 
-            if (direction == Directions.LeftUp || direction == Directions.RightUp)
+            if (direction == Directions.LeftDown || direction == Directions.RightDown)
                 changeY = -changeY;
             if (direction == Directions.LeftDown || direction == Directions.LeftUp)
                 changeX = -changeX;

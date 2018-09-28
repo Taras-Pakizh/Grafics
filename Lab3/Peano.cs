@@ -10,6 +10,10 @@ namespace Lab3
 {
     class Peano : Fractal
     {
+        //Vars
+        private readonly Point center = new Point(0, 0);
+        private readonly double defaulfSize = 1;
+
         //Constructor
         public Peano(CanvasInfo canvasInfo)
         {
@@ -40,7 +44,7 @@ namespace Lab3
             newGeomeries[0] = RoundFractal(newGeomeries.First(), Sides.Right);
             newGeomeries[3] = RoundFractal(newGeomeries.Last(), Sides.Left);
             for (int i = 0; i < newGeomeries.Count; ++i)
-                newGeomeries[i] = NextPositionFractal(newGeomeries[i], (Directions)i);
+                newGeomeries[i] = NextPositionFractal(newGeomeries[i], (Directions)i, prevFractal);
             result.geometry = UnionGeometries(newGeomeries);
             return result;
         }
@@ -77,8 +81,6 @@ namespace Lab3
         //Default fractal
         private PathGeometry CreateDeafaulFractal()
         {
-            var center = new Point(0, 0);
-            double defaulfSize = 1;
             PathFigure figure = new PathFigure();
             figure.StartPoint = new Point()
             {
@@ -143,10 +145,10 @@ namespace Lab3
         }
 
         //New Positions
-        private PathGeometry NextPositionFractal(PathGeometry pathGeometry, Directions direction)
+        private PathGeometry NextPositionFractal(PathGeometry pathGeometry, Directions direction, Fractal prevFractal)
         {
             var figure = pathGeometry.Figures.First();
-            var changeX = Math.Abs(figure.StartPoint.X) * 2;
+            var changeX = Math.Pow(2, prevFractal.Stage - 1);
             var changeY = changeX;
             var polyline = (PolyLineSegment)figure.Segments.First();
 

@@ -33,7 +33,7 @@ namespace Lab3
             path.Stroke = Brushes.Black;
             path.StrokeThickness = 2;
             Fractal fractal = new Peano(info);
-            fractal.CreateNextStages(3);
+            fractal.CreateNextStages(5);
             path.Data = fractal.TopGeometry();
             MyCanvas.Children.Add(path);
         }

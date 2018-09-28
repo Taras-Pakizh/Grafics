@@ -20,6 +20,8 @@ namespace Lab3
     /// </summary>
     public partial class MainWindow : Window
     {
+        Fractal fractal = null;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -28,13 +30,19 @@ namespace Lab3
 
         public void Do()
         {
-            CanvasInfo info = new CanvasInfo(800, 400, new Point(400, 200));
+            fractal = new Peano();
+            fractal.CreateNextStages(7);
+        }
+
+        private void MyCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            CanvasInfo info = new CanvasInfo(e.NewSize.Width, e.NewSize.Height, new Point(e.NewSize.Width / 2, e.NewSize.Height / 2));
+            fractal.info = info;
             Path path = new Path();
             path.Stroke = Brushes.Black;
             path.StrokeThickness = 2;
-            Fractal fractal = new Peano(info);
-            fractal.CreateNextStages(5);
             path.Data = fractal.TopGeometry();
+            MyCanvas.Children.Clear();
             MyCanvas.Children.Add(path);
         }
     }

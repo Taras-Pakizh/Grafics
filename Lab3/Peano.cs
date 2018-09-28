@@ -15,6 +15,10 @@ namespace Lab3
         private readonly double defaulfSize = 1;
 
         //Constructor
+        public Peano()
+        {
+            Stage = 1;
+        }
         public Peano(CanvasInfo canvasInfo)
         {
             info = canvasInfo;
@@ -182,7 +186,7 @@ namespace Lab3
         {
             var figure = geometry.Figures.First();
             var polyline = (PolyLineSegment)figure.Segments.First();
-            var defaultSize = Math.Abs(figure.StartPoint.X);
+            var DefaultSize = Math.Abs(figure.StartPoint.X);
 
             List<double> limits = new List<double>(4);
             limits.Add(info.FractalCenter.X);
@@ -193,7 +197,7 @@ namespace Lab3
             double thickness = 25;
             var minLimit = limits.Min() - thickness;
 
-            double coof = minLimit / defaultSize;
+            double coof = minLimit / DefaultSize;
             
             PathFigure newFigure = new PathFigure();
             newFigure.StartPoint = ConvertToCanvas(figure.StartPoint, coof);
@@ -213,7 +217,7 @@ namespace Lab3
             return new Point()
             {
                 X = point.X * coof + info.FractalCenter.X,
-                Y = point.Y * coof + info.FractalCenter.Y
+                Y = (-point.Y) * coof + info.FractalCenter.Y
             };
         }
     }

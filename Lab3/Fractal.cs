@@ -12,7 +12,24 @@ namespace Lab3
         public Fractal nextStage;
 
         public PathGeometry geometry { get; set; }
-        public CanvasInfo info { get; set; }
+        private CanvasInfo canvasInfo;
+        public CanvasInfo info
+        {
+            get
+            {
+                return canvasInfo;
+            }
+            set
+            {
+                canvasInfo = value;
+                Fractal fractal = this;
+                while(fractal.nextStage != null)
+                {
+                    fractal = fractal.nextStage;
+                    fractal.canvasInfo = value;
+                }
+            }
+        }
         public int Stage { get; protected set; }
         public PathGeometry this[int index]
         {

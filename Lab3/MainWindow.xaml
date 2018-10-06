@@ -4,31 +4,40 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Lab3"
-        mc:Ignorable="d" Height="450" Width="800">
+        mc:Ignorable="d" Height="450" Width="800" Title="Крива Пеано">
     <Grid>
+
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.95*"/>
+            <RowDefinition Height="0.85*"/>
+            <RowDefinition Height="0.1*"/>
             <RowDefinition Height="0.05*"/>
         </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.2*"/>
-            <ColumnDefinition Width="0.2*"/>
-            <ColumnDefinition Width="0.2*"/>
-            <ColumnDefinition Width="0.15*"/>
-            <ColumnDefinition Width="0.05*"/>
-            <ColumnDefinition Width="0.2*"/>
-        </Grid.ColumnDefinitions>
-        
-        <Button Grid.Row="1" Grid.Column="5" Name="BuildBut" Content="Build" Click="BuildBut_Click"/>
-        <Button Grid.Row="1" Grid.Column="2" Name="DeleteBut" Content="Delete" Click="DeleteBut_Click"/>
-        <Button Grid.Row="1" Grid.Column="0" Name="AddIterateBut" Content="Add iterete" Click="AddIterateBut_Click"/>
-        <Button Grid.Row="1" Grid.Column="1" Name="RemoveIterateBut" Content="Remove iterate" Click="RemoveIterateBut_Click"/>
-        <CheckBox Grid.Row="1" Grid.Column="3" Name="StepBySpepBox" Content="Step by Step" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <TextBox Grid.Row="1" Grid.Column="4" Name="InputBox" BorderBrush="Black" Text="1" TextAlignment="Right"/>
-        
+        <Canvas Background="Azure" x:Name="MyCanvas" SizeChanged="MyCanvas_SizeChanged" MouseLeftButtonDown="MyCanvas_MouseLeftButtonDown"/>
+        <Ellipse Width="10" Height="10" Fill="Red" Visibility="Visible" Name="MyElipse"/>
 
-        <Canvas Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" Background="Azure" x:Name="MyCanvas" SizeChanged="MyCanvas_SizeChanged" MouseLeftButtonDown="MyCanvas_MouseLeftButtonDown"/>
-        <Ellipse Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" Width="10" Height="10" Fill="Red" Visibility="Visible" Name="MyElipse"/>
+        <Grid Grid.Row="1" Background="Orange">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            
+            <Button Background="White" BorderThickness="0" Grid.Column="5" FontFamily="Segoe UI Light" FontSize="20" Name="BuildBut" Content="Build" Click="BuildBut_Click" Margin="5, 5, 5, 5"/>
+            <Button Background="White" BorderThickness="0" Grid.Column="2" FontFamily="Segoe UI Light" FontSize="20" Name="DeleteBut" Content="Delete" Click="DeleteBut_Click" Margin="5, 5, 5, 5"/>
+            <Button Background="White" BorderThickness="0" Grid.Column="0" FontFamily="Segoe UI Light" FontSize="20" Name="AddIterateBut" Content="Add iterete" Click="AddIterateBut_Click" Margin="5, 5, 5, 5"/>
+            <Button Background="White" BorderThickness="0" Grid.Column="1" FontFamily="Segoe UI Light" FontSize="20" Name="RemoveIterateBut" Content="Remove iterate" Click="RemoveIterateBut_Click" Margin="5, 5, 5, 5"/>
+            <CheckBox Grid.Column="3" Name="StepBySpepBox" FontSize="15" Foreground="White" Content="Step by Step" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5, 5, 5, 5"/>
+            <TextBox Background="White" BorderThickness="0" Grid.Column="4" FontFamily="Segoe UI Light" FontSize="25" Name="InputBox" BorderBrush="Black" Text="1" TextAlignment="Right" Margin="5, 5, 5, 5"/>
+
+        </Grid>
+
+        <Grid Grid.Row="2" Background="Orange">
+            <Label Content="Крива Пеано: 0" HorizontalAlignment="Center" Name="MyLabel"/>
+        </Grid>        
     </Grid>
 </Window>

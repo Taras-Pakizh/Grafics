@@ -100,6 +100,7 @@ namespace Lab3
             }
             CanvasInfo info = new CanvasInfo(MyCanvas.ActualWidth, MyCanvas.ActualHeight, new Point(MyElipse.Margin.Left, MyElipse.Margin.Top));
             BuildFractal(info, iterations, false);
+            MyLabel.Content = "Крива Пеано: " + currentStage.ToString();
         }
         private void Tick(object sender, EventArgs e)
         {
@@ -116,6 +117,7 @@ namespace Lab3
             if (currentStage == 9) return;
             ++currentStage;
             InputBox.Text = currentStage.ToString();
+            MyLabel.Content = "Крива Пеано: " + currentStage.ToString();
             CanvasInfo info = new CanvasInfo(MyCanvas.ActualWidth, MyCanvas.ActualHeight, new Point(MyElipse.Margin.Left, MyElipse.Margin.Top));
             BuildFractal(info, currentStage, false);
         }
@@ -124,6 +126,7 @@ namespace Lab3
             --currentStage;
             if (currentStage < 1) return;
             InputBox.Text = currentStage.ToString();
+            MyLabel.Content = "Крива Пеано: " + currentStage.ToString();
             CanvasInfo info = new CanvasInfo(MyCanvas.ActualWidth, MyCanvas.ActualHeight, new Point(MyElipse.Margin.Left, MyElipse.Margin.Top));
             BuildFractal(info, currentStage, false);
         }

@@ -8,10 +8,12 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.9*"/>
+            <RowDefinition Height="0.8*"/>
+            <RowDefinition Height="0.1*"/>
             <RowDefinition Height="0.1*"/>
         </Grid.RowDefinitions>
-        <Image Name="MyImage" Grid.Row="0" Source="D:\LP\LP_5_semester\Compute Grafics\Labs\sticker1BMP.bmp"/>
+        <Image Name="MyImage" Grid.Row="0" Source="D:\LP\LP_5_semester\Compute Grafics\Labs\sticker1.bmp"/>
         <Button Name="MyButton" Grid.Row="1" Content="Test" Click="MyButton_Click"/>
+        <Button Name="TestButton" Grid.Row="2" Content="Test" Click="TestButton_Click"/>
     </Grid>
 </Window>

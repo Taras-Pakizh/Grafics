@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Drawing;
 using System.IO;
+using Color = System.Drawing.Color;
 
 namespace Lab4
 {
@@ -36,7 +37,24 @@ namespace Lab4
                 var image = System.Drawing.Image.FromStream(stream);
                 bitmap = new Bitmap(image);
             }
+
+            for(int row = 0; row < bitmap.Height; ++row)
+                for(int col = 0; col < bitmap.Width; ++col)
+                {
+                    var pixel = bitmap.GetPixel(row, col);
+                    var cmyk = Converter.RGB_to_CMYK(pixel);
+                    cmyk.M = 1;
+                    pixel = Converter.CMYK_to_RGB(cmyk).ToColor();
+                    bitmap.SetPixel(row, col, pixel);
+                }
+
             MyImage.Source = Converter.ToBitmapSource(bitmap);
+        }
+
+        private void TestButton_Click(object sender, RoutedEventArgs e)
+        {
+            Color color = Color.FromArgb(125, 29, 107);
+            MessageBox.Show(color.GetHue() + " " + color.GetSaturation() + " " + color.GetBrightness());
         }
     }
 }

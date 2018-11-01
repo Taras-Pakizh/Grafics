@@ -73,7 +73,78 @@ namespace Lab4
 
             return new HSV(h, s, (v / 255));
         }
-        
+
+        public static RGB HSV_to_RGB(HSV hsv)
+        {
+            double r = 0, g = 0, b = 0;
+
+            if (hsv.S == 0)
+            {
+                r = hsv.V;
+                g = hsv.V;
+                b = hsv.V;
+            }
+            else
+            {
+                int i;
+                double f, p, q, t;
+
+                if (hsv.H == 360)
+                    hsv.H = 0;
+                else
+                    hsv.H = hsv.H / 60;
+
+                i = (int)Math.Truncate(hsv.H);
+                f = hsv.H - i;
+
+                p = hsv.V * (1.0 - hsv.S);
+                q = hsv.V * (1.0 - (hsv.S * f));
+                t = hsv.V * (1.0 - (hsv.S * (1.0 - f)));
+
+                switch (i)
+                {
+                    case 0:
+                        r = hsv.V;
+                        g = t;
+                        b = p;
+                        break;
+
+                    case 1:
+                        r = q;
+                        g = hsv.V;
+                        b = p;
+                        break;
+
+                    case 2:
+                        r = p;
+                        g = hsv.V;
+                        b = t;
+                        break;
+
+                    case 3:
+                        r = p;
+                        g = q;
+                        b = hsv.V;
+                        break;
+
+                    case 4:
+                        r = t;
+                        g = p;
+                        b = hsv.V;
+                        break;
+
+                    default:
+                        r = hsv.V;
+                        g = p;
+                        b = q;
+                        break;
+                }
+
+            }
+
+            return new RGB((byte)(r * 255), (byte)(g * 255), (byte)(b * 255));
+        }
+
         public static CMYK RGB_to_CMYK(System.Drawing.Color color)
         {
             RGB rgb = new RGB(color.R, color.G, color.B);
@@ -115,6 +186,34 @@ namespace Lab4
         public override string ToString()
         {
             return H + " " + S + " " + V;
+        }
+
+        public static HSV operator *(HSV first, HSV second)
+        {
+            return new HSV()
+            {
+                H = first.H * second.H,
+                S = first.S * second.S,
+                V = first.V * second.V
+            };
+        }
+
+        public void ToNormal()
+        {
+            if(H < 0)
+            {
+                while (H < 0)
+                    H += 360;
+            }
+            if(H > 360)
+            {
+                while (H > 360)
+                    H -= 360;
+            }
+            if (S < 0) S = 0;
+            if (S > 1) S = 1;
+            if (V < 0) V = 0;
+            if (V > 1) V = 1;
         }
     }
 
@@ -159,6 +258,29 @@ namespace Lab4
         public override string ToString()
         {
             return C + " " + M + " " + Y + " " + K;
+        }
+
+        public static CMYK operator *(CMYK first, CMYK second)
+        {
+            return new CMYK()
+            {
+                C = first.C * second.C,
+                M = first.M * second.M,
+                Y = first.Y * second.Y,
+                K = first.K * second.K
+            };
+        }
+
+        public void ToNormal()
+        {
+            if (C < 0) C = 0;
+            if (C > 1) C = 1;
+            if (M < 0) M = 0;
+            if (M > 1) M = 1;
+            if (Y < 0) Y = 0;
+            if (Y > 1) Y = 1;
+            if (K < 0) K = 0;
+            if (K > 1) K = 1;
         }
     }
 }

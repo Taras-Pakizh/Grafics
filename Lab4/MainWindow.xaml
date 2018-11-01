@@ -5,15 +5,76 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Lab4"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="700" Width="1000">
     <Grid>
+
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.8*"/>
-            <RowDefinition Height="0.1*"/>
-            <RowDefinition Height="0.1*"/>
+            <RowDefinition Height="0.85*"/>
+            <RowDefinition Height="0.15*"/>
         </Grid.RowDefinitions>
-        <Image Name="MyImage" Grid.Row="0" Source="D:\LP\LP_5_semester\Compute Grafics\Labs\sticker1.bmp"/>
-        <Button Name="MyButton" Grid.Row="1" Content="Test" Click="MyButton_Click"/>
-        <Button Name="TestButton" Grid.Row="2" Content="Test" Click="TestButton_Click"/>
+        
+        <Image Name="MyImage" Grid.Row="0" />
+
+        <Grid Grid.Row="1" Background="Orange">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.1*"/>
+                <ColumnDefinition Width="0.1*"/>
+                <ColumnDefinition Width="0.4*"/>
+                <ColumnDefinition Width="0.4*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Name="OpenButton" Content="Open File" Grid.Column="0" Margin="5,5,5,5" Background="White" BorderThickness="0" FontFamily="Segoe UI Light" FontSize="15" Click="OpenButton_Click"/>
+            <Button Name="ConvertButton" Content="Convert" Grid.Column="1" Margin="5,5,5,5" Background="White" BorderThickness="0" FontFamily="Segoe UI Light" FontSize="15" Click="ConvertButton_Click"/>
+
+            <Grid Background="Orange" Grid.Column="2">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.1*"/>
+                    <ColumnDefinition Width="0.9*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Content="H" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center"/>
+                <Label Content="S" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center"/>
+                <Label Content="V" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Center"/>
+
+                <Slider Name="HSV_H_Slider" Grid.Column="1" Grid.Row="0" Minimum="0" Maximum="10" Value="1"/>
+                <Slider Name="HSV_S_Slider" Grid.Column="1" Grid.Row="1" Minimum="0" Maximum="10" Value="1"/>
+                <Slider Name="HSV_V_Slider" Grid.Column="1" Grid.Row="2" Minimum="0" Maximum="10" Value="1"/>
+
+            </Grid>
+
+            <Grid Background="Orange" Grid.Column="3">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.1*"/>
+                    <ColumnDefinition Width="0.9*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Content="C" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center"/>
+                <Label Content="M" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center"/>
+                <Label Content="Y" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Center"/>
+                <Label Content="K" Grid.Column="0" Grid.Row="3" HorizontalAlignment="Center"/>
+
+                <Slider Name="CMYK_C_Slider" Grid.Column="1" Grid.Row="0" Minimum="0" Maximum="10" Value="1"/>
+                <Slider Name="CMYK_M_Slider" Grid.Column="1" Grid.Row="1" Minimum="0" Maximum="10" Value="1"/>
+                <Slider Name="CMYK_Y_Slider" Grid.Column="1" Grid.Row="2" Minimum="0" Maximum="10" Value="1"/>
+                <Slider Name="CMYK_K_Slider" Grid.Column="1" Grid.Row="3" Minimum="0" Maximum="10" Value="1"/>
+            </Grid>
+
+            
+        </Grid>
     </Grid>
 </Window>

@@ -14,12 +14,33 @@ namespace Lab5
             List<Point> result = new List<Point>();
             for(double t = step; t < 1; t += step)
             {
-                result.Add(_GetPoint(t, points));
+                result.Add(_GetPointTraditional(t, points));
             }
             return result;
         }
 
-        private static Point _GetPoint(double t, List<Point> points)
+        public static List<Point> Recurtion(List<Point> points, double step)
+        {
+            List<Point> result = new List<Point>();
+            for(double t = step; t < 1; t += step)
+            {
+                result.Add(_GetPointRecurtion(t, points));
+            }
+            return result;
+        }
+
+        private static Point _GetPointRecurtion(double t, List<Point> points)
+        {
+            if(points.Count == 1)
+            {
+                return _GetPointTraditional(t, points);
+            }
+            Point first = _GetPointRecurtion(t, points.Take(points.Count - 1).ToList()).Multiple(1 - t);
+            Point second = _GetPointRecurtion(t, points.Skip(1).ToList()).Multiple(t);
+            return first.Add(second);
+        }
+
+        private static Point _GetPointTraditional(double t, List<Point> points)
         {
             Point result = new Point(0, 0);
             double temp;

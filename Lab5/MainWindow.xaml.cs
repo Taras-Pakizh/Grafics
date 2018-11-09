@@ -26,10 +26,10 @@ namespace Lab5
 
             List<Point> points = new List<Point>()
             {
-                new Point(100, 100),
-                new Point(500, 300),
+                new Point(100, 200),
+                new Point(200, 300),
                 new Point(400, 300),
-                new Point(700, 500)
+                new Point(300, 100)
             };
             double step = 0.001;
 
@@ -45,6 +45,7 @@ namespace Lab5
 
         private void _GetBezie(List<Point> points, double step)
         {
+            //points = Bezie.Recurtion(points, step);
             points = Bezie.Traditional(points, step);
             _DrawPoints(points, 2);
         }

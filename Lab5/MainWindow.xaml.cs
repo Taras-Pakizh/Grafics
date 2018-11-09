@@ -23,8 +23,45 @@ namespace Lab5
         public MainWindow()
         {
             InitializeComponent();
-            Do();
+
+            List<Point> points = new List<Point>()
+            {
+                new Point(100, 100),
+                new Point(500, 300),
+                new Point(400, 300),
+                new Point(700, 500)
+            };
+            double step = 0.001;
+
+            _GetPolyline(points);
+            _GetBezie(points, step);
         }
-        
+
+        private void _GetPolyline(List<Point> points)
+        {
+            MyCanvas.Children.Add(PathCreator.GetPolynom(points));
+            _DrawPoints(points, 5);
+        }
+
+        private void _GetBezie(List<Point> points, double step)
+        {
+            points = Bezie.Traditional(points, step);
+            _DrawPoints(points, 2);
+        }
+
+        private void _DrawPoints(List<Point> points, int radius)
+        {
+            foreach (var point in points)
+            {
+                var elipse = new Ellipse()
+                {
+                    Fill = Brushes.Black,
+                    Height = radius,
+                    Width = radius
+                };
+                elipse.Margin = new Thickness(point.X - (elipse.Width / 2), point.Y - (elipse.Height / 2), 0, 0);
+                MyCanvas.Children.Add(elipse);
+            }
+        }
     }
 }

@@ -200,12 +200,12 @@ namespace Lab4
 
         public void ToNormal()
         {
-            if(H < 0)
+            if (H < 0)
             {
                 while (H < 0)
                     H += 360;
             }
-            if(H > 360)
+            if (H > 360)
             {
                 while (H > 360)
                     H -= 360;

@@ -32,16 +32,16 @@ namespace Lab4
 
         private Bitmap _DefaultBitmap;
         private Bitmap bitmap;
-        
+
         private void OpenButton_Click(object sender, RoutedEventArgs e)
         {
-            string filepath = ""; 
+            string filepath = "";
 
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
                 filepath = openFileDialog.FileName;
 
-            if(filepath.Length == 0)
+            if (filepath.Length == 0)
             {
                 MessageBox.Show("File didn't open");
                 return;
@@ -53,9 +53,9 @@ namespace Lab4
                 ".jpg", ".JPG",
                 ".jpeg", ".JPEG"
             };
-            for(int i = 0; i < files.Length + 1; ++i)
+            for (int i = 0; i < files.Length + 1; ++i)
             {
-                if(i == files.Length)
+                if (i == files.Length)
                 {
                     MessageBox.Show("It is not image");
                     return;
@@ -63,7 +63,7 @@ namespace Lab4
                 if (filepath.EndsWith(files[i]))
                     break;
             }
-            
+
             using (Stream stream = File.Open(filepath, FileMode.Open))
             {
                 var image = System.Drawing.Image.FromStream(stream);

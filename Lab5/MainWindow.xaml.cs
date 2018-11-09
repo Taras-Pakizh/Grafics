@@ -23,6 +23,8 @@ namespace Lab5
         public MainWindow()
         {
             InitializeComponent();
+            Do();
         }
+        
     }
 }

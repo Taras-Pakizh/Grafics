@@ -20,49 +20,54 @@ namespace Lab5
     /// </summary>
     public partial class MainWindow : Window
     {
+        private List<Point> _points = new List<Point>();
+        private double _step = 0.001;
+
         public MainWindow()
         {
             InitializeComponent();
-
-            List<Point> points = new List<Point>()
-            {
-                new Point(100, 200),
-                new Point(200, 300),
-                new Point(400, 300),
-                new Point(300, 100)
-            };
-            double step = 0.001;
-
-            _GetPolyline(points);
-            _GetBezie(points, step);
         }
 
-        private void _GetPolyline(List<Point> points)
-        {
-            MyCanvas.Children.Add(PathCreator.GetPolynom(points));
-            _DrawPoints(points, 5);
-        }
-
-        private void _GetBezie(List<Point> points, double step)
-        {
-            //points = Bezie.Recurtion(points, step);
-            points = Bezie.Traditional(points, step);
-            _DrawPoints(points, 2);
-        }
-
-        private void _DrawPoints(List<Point> points, int radius)
+        private void _DrawPoints(List<Point> points, int radius, Brush brush)
         {
             foreach (var point in points)
             {
                 var elipse = new Ellipse()
                 {
-                    Fill = Brushes.Black,
+                    Fill = brush,
                     Height = radius,
                     Width = radius
                 };
                 elipse.Margin = new Thickness(point.X - (elipse.Width / 2), point.Y - (elipse.Height / 2), 0, 0);
                 MyCanvas.Children.Add(elipse);
             }
+        }
+
+        private void MyCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var location = e.GetPosition(MyCanvas);
+            _points.Add(location);
+            if (_points.Count == 1)
+                _DrawPoints(_points, 8, Brushes.Orange);
+
+            if(_points.Count > 1 && ComboBox_Algorithm.SelectedItem != null)
+            {
+                MyCanvas.Children.Clear();
+                _DrawPoints(_points, 8, Brushes.Orange);
+                var item = (ComboBoxItem)ComboBox_Algorithm.SelectedItem;
+                List<Point> bezie = new List<Point>();
+                if ((string)item.Content == "Traditional")
+                    bezie = Bezie.Traditional(_points, _step);
+                else if ((string)item.Content == "Recurtional")
+                    bezie = Bezie.Recurtion(_points, _step);
+                _DrawPoints(bezie, 2, Brushes.Black);
+            }
+        }
+
+        private void Button_Clear_Click(object sender, RoutedEventArgs e)
+        {
+            _points.Clear();
+            MyCanvas.Children.Clear();
         }
     }
 }

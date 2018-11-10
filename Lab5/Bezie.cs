@@ -62,9 +62,63 @@ namespace Lab5
             return value * _Factorial(value - 1);
         }
 
+        private static List<double> _PartFactorials(int value)
+        {
+            List<double> result = new List<double>();
+            for(int i = 2, number = 1; i <= value; ++i)
+            {
+                number *= i;
+                if(number > _maxValue)
+                {
+                    result.Add(number);
+                    number = 1;
+                }
+                if (i == value)
+                    result.Add(number);
+            }
+            if (result.Count == 0)
+                result.Add(1);
+            return result;
+        }
+
+        private static int _maxValue = _Factorial(9);
+
+        private static double _FindFactorial(int n, int i)
+        {
+            if (n < 13)
+                return _Factorial(n) / (_Factorial(i) * _Factorial(n - i));
+
+            List<double> UpValues = _PartFactorials(n);
+            List<double> DownValues = _PartFactorials(i);
+            DownValues.AddRange(_PartFactorials(n - i));
+
+            int temp;
+            List<double> results = new List<double>();
+            if (UpValues.Count <= DownValues.Count)
+                temp = UpValues.Count;
+            else temp = DownValues.Count;
+
+            UpValues = UpValues.OrderByDescending(x => x).ToList();
+            DownValues = DownValues.OrderByDescending(x => x).ToList();
+
+            for(int index = 0; index < temp; ++index)
+            {
+                results.Add(UpValues[index] / DownValues[index]);
+            }
+            double Result = results.Aggregate((x, y) => x * y);
+            UpValues = UpValues.Skip(temp).ToList();
+            DownValues = DownValues.Skip(temp).ToList();
+
+            if (UpValues.Count != 0)
+                Result *= UpValues.Aggregate((x, y) => x * y);
+            if (DownValues.Count != 0)
+                Result /= DownValues.Aggregate((x, y) => x * y);
+            return Result;
+        }
+
         private static double _Bernshtein(int n, double t, int i)
         {
-            return (_Factorial(n) / (_Factorial(i) * _Factorial(n - i))) * Math.Pow(t, i) * Math.Pow(1 - t, n - i);
+            return _FindFactorial(n, i) * Math.Pow(t, i) * Math.Pow(1 - t, n - i);
         }
     }
 }

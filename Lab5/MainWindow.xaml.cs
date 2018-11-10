@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +22,7 @@ namespace Lab5
     public partial class MainWindow : Window
     {
         private List<Point> _points = new List<Point>();
-        private double _step = 0.001;
+        private double _step = 0.005;
 
         public MainWindow()
         {
@@ -60,7 +61,10 @@ namespace Lab5
                     bezie = Bezie.Traditional(_points, _step);
                 else if ((string)item.Content == "Recurtional")
                     bezie = Bezie.Recurtion(_points, _step);
-                _DrawPoints(bezie, 2, Brushes.Black);
+              
+                var path = PathCreator.GetPath();
+                path.Data = Geometry.Parse(PathCreator.GetCurveInfo(bezie, _points));
+                MyCanvas.Children.Add(path);
             }
         }
 

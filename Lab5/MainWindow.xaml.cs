@@ -29,7 +29,7 @@ namespace Lab5
             InitializeComponent();
         }
 
-        private void _DrawPoints(List<Point> points, int radius, Brush brush)
+        private void _DrawElipses(List<Point> points, int radius, Brush brush)
         {
             foreach (var point in points)
             {
@@ -49,29 +49,89 @@ namespace Lab5
             var location = e.GetPosition(MyCanvas);
             _points.Add(location);
             if (_points.Count == 1)
-                _DrawPoints(_points, 8, Brushes.Orange);
+                _DrawElipses(_points, 8, Brushes.Orange);
 
             if(_points.Count > 1 && ComboBox_Algorithm.SelectedItem != null)
             {
-                MyCanvas.Children.Clear();
-                _DrawPoints(_points, 8, Brushes.Orange);
-                var item = (ComboBoxItem)ComboBox_Algorithm.SelectedItem;
-                List<Point> bezie = new List<Point>();
-                if ((string)item.Content == "Traditional")
-                    bezie = Bezie.Traditional(_points, _step);
-                else if ((string)item.Content == "Recurtional")
-                    bezie = Bezie.Recurtion(_points, _step);
-              
-                var path = PathCreator.GetPath();
-                path.Data = Geometry.Parse(PathCreator.GetCurveInfo(bezie, _points));
-                MyCanvas.Children.Add(path);
+                _DrawBezie();
             }
+        }
+
+        private void _DrawBezie()
+        {
+            MyCanvas.Children.Clear();
+            _DrawElipses(_points, 8, Brushes.Orange);
+            var item = (ComboBoxItem)ComboBox_Algorithm.SelectedItem;
+            List<Point> bezie = new List<Point>();
+            if (item != null && (string)item.Content == "Traditional")
+                bezie = Bezie.Traditional(_points, _step);
+            else if ( item != null && (string)item.Content == "Recurtional")
+                bezie = Bezie.Recurtion(_points, _step);
+            else bezie = Bezie.Traditional(_points, _step);
+
+            var path = PathCreator.GetPath();
+            path.Data = Geometry.Parse(PathCreator.GetCurveInfo(bezie, _points));
+            MyCanvas.Children.Add(path);
         }
 
         private void Button_Clear_Click(object sender, RoutedEventArgs e)
         {
             _points.Clear();
             MyCanvas.Children.Clear();
+        }
+
+        private void Button_SetPoints_Click(object sender, RoutedEventArgs e)
+        {
+            Dialog_PointSet dialog = new Dialog_PointSet();
+            dialog.Return += (result, ex) =>
+            {
+                _points = ConvertPointsToCanvas((List<Point>)result);
+                dialog.Close();
+                _DrawElipses(_points, 8, Brushes.Orange);
+                _DrawBezie();
+            };
+            dialog.Show();
+        }
+
+        private List<Point> ConvertPointsToCanvas(List<Point> points)
+        {
+            double width = MyCanvas.ActualWidth / 2;
+            double height = MyCanvas.ActualHeight / 2;
+
+            if(points.Max(x=>x.X) > width)
+            {
+                double value = width / (points.Max(x => x.X) + 20);
+                ModifyList(points, value);
+            }
+            if(points.Max(x=>x.Y) > height)
+            {
+                double value = height / (points.Max(x => x.Y) + 20);
+                ModifyList(points, value);
+            }
+
+            ModifyList(points, new Point(width, height));
+
+            return points;
+        }
+
+        private void ModifyList(List<Point> points, double value)
+        {
+            for (int i = 0; i < points.Count; ++i)
+                points[i] = new Point()
+                {
+                    X = points[i].X * value,
+                    Y = points[i].Y * value
+                };
+        }
+
+        private void ModifyList(List<Point> points, Point center)
+        {
+            for (int i = 0; i < points.Count; ++i)
+                points[i] = new Point()
+                {
+                    X = center.X + points[i].X,
+                    Y = center.Y - points[i].Y
+                };
         }
     }
 }

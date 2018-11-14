@@ -1,0 +1,35 @@
+﻿<Window x:Class="Lab5.TipWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Lab5"
+        mc:Ignorable="d"
+        Title="TipWindow" Height="300" Width="500">
+    <Window.Resources>
+        <Style x:Key="MyStyle">
+            <Setter Property="Control.Background" Value="White"/>
+            <Setter Property="Control.Margin" Value="5, 5, 5, 5"/>
+            <Setter Property="Control.BorderThickness" Value="0"/>
+            <Setter Property="Control.FontFamily" Value="Segoe UI Light"/>
+            <Setter Property="Control.FontSize" Value="20"/>
+
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.65*"/>
+            <RowDefinition Height="0.25*"/>
+        </Grid.RowDefinitions>
+
+        <ListBox ToolTip="Tip to show on canvas" Name="ListBox_Tips" Grid.Row="0" Style="{StaticResource MyStyle}">
+            <ListBoxItem Content="Simple Line" Background="Orange"/>
+            <ListBoxItem Content="Right sequence"/>
+            <ListBoxItem Content="Changed sequence" Background="Orange"/>
+        </ListBox>
+
+        <Grid Grid.Row="1" Background="Orange">
+            <Button ToolTip="Choose tip and watch it on canvas" Name="TryTip_Button" Content="Try Tip" Style="{StaticResource MyStyle}" Click="TryTip_Button_Click"/>
+        </Grid>
+    </Grid>
+</Window>

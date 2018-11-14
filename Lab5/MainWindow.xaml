@@ -13,7 +13,7 @@
             <RowDefinition Height="0.1*"/>
         </Grid.RowDefinitions>
         
-        <Canvas Name="MyCanvas" Grid.Row="0" Background="LightYellow" MouseLeftButtonDown="MyCanvas_MouseLeftButtonDown"/>
+        <Canvas Name="MyCanvas" Grid.Row="0" Background="LightYellow" ToolTip="Click on canvas to set a point and draw curve" MouseLeftButtonDown="MyCanvas_MouseLeftButtonDown"/>
 
         <Grid Grid.Row="1" Background="Orange">
             <Grid.ColumnDefinitions>
@@ -23,14 +23,13 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <Button Name="Button_Clear" Content="Clear" Grid.Column="0" Margin="5,5,5,5" Background="White" BorderThickness="0" FontFamily="Segoe UI Light" FontSize="20" Click="Button_Clear_Click" />
-            <Button Name="Button_SetPoints" Content="Set points" Grid.Column="1" Margin="5,5,5,5" Background="White" BorderThickness="0" FontFamily="Segoe UI Light" FontSize="20" Click="Button_SetPoints_Click" />
-            <Button Name="Button_Tips" Content="Tips" Grid.Column="2" Margin="5,5,5,5" Background="White" BorderThickness="0" FontFamily="Segoe UI Light" FontSize="20" />
-            <ComboBox Name="ComboBox_Algorithm" Text="Choose Algorithm" Grid.Column="3" Margin="5,5,5,5" Background="White" BorderThickness="0" FontFamily="Segoe UI Light" FontSize="20">
+            <Button Name="Button_Clear" ToolTip="Delete all points and curve" Content="Clear" Grid.Column="0" Margin="5,5,5,5" Background="White" BorderThickness="0" FontFamily="Segoe UI Light" FontSize="20" Click="Button_Clear_Click" />
+            <Button Name="Button_SetPoints" ToolTip="Click to open dialog window for seting points" Content="Set points" Grid.Column="1" Margin="5,5,5,5" Background="White" BorderThickness="0" FontFamily="Segoe UI Light" FontSize="20" Click="Button_SetPoints_Click" />
+            <Button Name="Button_Tips" ToolTip="Click to open dialog window with help" Content="Tips" Grid.Column="2" Margin="5,5,5,5" Background="White" BorderThickness="0" FontFamily="Segoe UI Light" FontSize="20" Click="Button_Tips_Click" />
+            <ComboBox SelectedIndex="0" ToolTip="Choose algorithm of Bezie curve" Name="ComboBox_Algorithm" Text="Choose Algorithm" Grid.Column="3" Margin="5,5,5,5" Background="White" BorderThickness="0" FontFamily="Segoe UI Light" FontSize="20">
                 <ComboBoxItem Content="Traditional"/>
                 <ComboBoxItem Content="Recurtional"/>
             </ComboBox>
         </Grid>
-        
     </Grid>
 </Window>

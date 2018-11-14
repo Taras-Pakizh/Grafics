@@ -22,7 +22,7 @@ namespace Lab5
         private List<Point> _result = new List<Point>();
         private Point _point;
 
-        public event EventHandler Return;
+        public event SetPointsEventHandler Return;
 
         public Dialog_PointSet()
         {
@@ -58,7 +58,10 @@ namespace Lab5
 
         private void Button_Return_Click(object sender, RoutedEventArgs e)
         {
-            Return?.Invoke(_result, null);
+            bool check = false;
+            if (CheckBox_StepByStep.IsChecked == true)
+                check = true;
+            Return?.Invoke(_result, check);
         }
     }
 }

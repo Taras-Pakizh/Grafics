@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Lab6"
         mc:Ignorable="d"
-        Height="450" Width="800" Loaded="Window_Loaded">
+        Height="450" Width="800" Loaded="Window_Loaded" SizeChanged="Window_SizeChanged">
     <Window.Resources>
         <Style x:Key="MyStyle">
             
@@ -23,7 +23,7 @@
             <RowDefinition Height="0.1*"/>
         </Grid.RowDefinitions>
         
-        <Canvas Name="MyCanvas" Grid.Row="0"/>
+        <Canvas Background="LightYellow"  Name="MyCanvas" Grid.Row="0" MouseLeftButtonDown="MyCanvas_MouseLeftButtonDown"/>
 
         <Grid Grid.Row="1" Background="Orange">
 

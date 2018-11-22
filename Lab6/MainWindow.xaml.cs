@@ -21,11 +21,11 @@ namespace Lab6
     /// </summary>
     public partial class MainWindow : Window
     {
+        private List<Point> _rectangle = new List<Point>();
         private RectangleDataContent content;
 
         private DispatcherTimer timer;
         private bool _IsMoving = false;
-        private double _step = 1;
         
         public MainWindow()
         {
@@ -33,13 +33,13 @@ namespace Lab6
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            content = new RectangleDataContent(new List<Point>()
-            {
-                new Point(100, 100),
-                new Point(500, 100),
-                new Point(500, 300),
-                new Point(100, 300)
-            });
+            //content = new RectangleDataContent(new List<Point>()
+            //{
+            //    new Point(600, 600),
+            //    new Point(1000, 600),
+            //    new Point(1000, 800),
+            //    new Point(600, 800)
+            //});
             _DrawDefault();
         }
 
@@ -47,16 +47,31 @@ namespace Lab6
         {
             MyCanvas.Children.Clear();
             _DrawAsix();
-            MyCanvas.Children.Add(PathCreator.GetRectangle(content.Rectancle));
-            if (content.IsReflacting)
-                MyCanvas.Children.Add(PathCreator.GetRectangle(content.Reflacting));
+            if(content != null)
+            {
+                MyCanvas.Children.Add(PathCreator.GetRectangle(content.Rectancle));
+                if (content.IsReflacting)
+                    MyCanvas.Children.Add(PathCreator.GetRectangle(content.Reflacting));
+            }
         }
 
         private void _DrawAsix()
         {
-            CanvasInfo info = new CanvasInfo(MyCanvas.ActualWidth, MyCanvas.ActualHeight);
+            var info = _GetCanvasInfo();
             MyCanvas.Children.Add(PathCreator.GetAxis(info));
             MyCanvas.Children.Add(PathCreator.GetYX(info));
+        }
+
+        private void _DrawElipse(Point point)
+        {
+            Ellipse ellipse = new Ellipse()
+            {
+                Width = 5,
+                Height = 5,
+                Fill = Brushes.Orange,
+                Margin = new Thickness(point.X, point.Y, 0, 0)
+            };
+            MyCanvas.Children.Add(ellipse);
         }
 
         private void Button_MoveYX_Click(object sender, RoutedEventArgs e)
@@ -78,17 +93,16 @@ namespace Lab6
 
         private void Timer_Move(object sender, EventArgs e)
         {
-            content.Move(new CanvasInfo(MyCanvas.ActualWidth, MyCanvas.ActualHeight), _step);
+            content.Move(_GetCanvasInfo());
             _DrawDefault();
         }
 
         private void Button_Reflection_Click(object sender, RoutedEventArgs e)
         {
-            CanvasInfo info = new CanvasInfo(MyCanvas.ActualWidth, MyCanvas.ActualHeight);
             if (content.IsReflacting)
                 content.IsReflacting = false;
             else
-                content.SetReflacting(info);
+                content.SetReflacting(_GetCanvasInfo());
             _DrawDefault();
         }
 
@@ -96,8 +110,47 @@ namespace Lab6
         {
             if (content == null) return;
             MyCanvas.Children.Clear();
-            content.ScaleRectangle(e.NewValue);
+            content.ScaleRectangle(e.NewValue, _GetCanvasInfo());
             _DrawDefault();
+        }
+
+        private CanvasInfo _GetCanvasInfo()
+        {
+            return new CanvasInfo(MyCanvas.ActualWidth, MyCanvas.ActualHeight);
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (content == null)
+                return;
+
+            double xValue = e.NewSize.Width / e.PreviousSize.Width;
+            double yValue = e.NewSize.Height / e.PreviousSize.Height;
+
+            var rectangle = content.RealRectancle;
+            for(int i = 0; i < rectangle.Count; ++i)
+                rectangle[i] = new Point()
+                {
+                    X = rectangle[i].X * xValue,
+                    Y = rectangle[i].Y * yValue
+                };
+            rectangle = RectangleCreator.Create(rectangle[0], rectangle[1]);
+            CanvasInfo info = new CanvasInfo(e.NewSize.Width, e.NewSize.Height);
+            content.SetNew(rectangle, info);
+
+            _DrawDefault();
+        }
+
+        private void MyCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            _rectangle.Add(e.GetPosition(MyCanvas));
+            _DrawElipse(_rectangle.Last());
+            if(_rectangle.Count == 2)
+            {
+                content = new RectangleDataContent(RectangleCreator.Create(_rectangle.First(), _rectangle.Last()));
+                _rectangle.Clear();
+                _DrawDefault();
+            }
         }
     }
 }
